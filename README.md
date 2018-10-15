@@ -27,4 +27,26 @@ $ deactivate # exit our environment
 
 ## Project structure
 
-__Coming soon…__
+|   File  |      Purpose      |
+|:-------:|:-----------------:|
+| main.py | The main app file |
+
+## Codestyle rules
+
+Code is divided in parts with the following format:
+```
+#======[SECTION NAME]====== » SECTION STATUS
+
+the actual code with 1 line before & 2 lines after
+
+```
+where 'SECTION STATUS' can be:
+* TO BE DONE
+* IN DEVELOPMENT
+* READY TO GO
+
+The important bits of code which should be revised later are marked with 'WARNING' as follows:
+```
+some code here # WARNING : some notes (optional)
+```
+
