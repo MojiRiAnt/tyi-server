@@ -35,15 +35,11 @@ $ deactivate # exit our environment
 
 Code is divided in parts with the following format:
 ```
-#======[SECTION NAME]====== » SECTION STATUS
+#======[SECTION NAME]====== » SECTION STATUS (TO BE DONE / IN DEVELOPMENT / READY TO GO)
 
 the actual code with 1 line before & 2 lines after
 
 ```
-where 'SECTION STATUS' can be:
-* TO BE DONE
-* IN DEVELOPMENT
-* READY TO GO
 
 The important bits of code which should be revised later are marked with 'WARNING' as follows:
 ```
