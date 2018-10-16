@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask 
 
-#======[APP CONFIG]====== » IN DEVELOPMENT
+#======[APP CONFIG]====== » READY TO GO
 
 app = Flask(__name__)
 app.config.update({
@@ -10,15 +10,18 @@ app.config.update({
 })
 
 
-#======[DATABASE STUFF]====== » TO BE DONE
+#======[DATABASE STUFF]====== » READY TO GO
 
+import database as db
+
+db.db.init_app(app)
 
 
 #======[HANDLING ROUTES]====== » IN DEVELOPMENT
 
-@app.route('/test')
-def test():
-    return "<h1>This is a test page</h1>"
+@app.route('/dbg')
+def dbg():
+    return "<h1>This is a debug page</h1>"
 
 
 #======[RUN & DEBUG]====== » READY TO GO
