@@ -4,11 +4,6 @@ db = SQLAlchemy()
 
 _STRING_SIZE = 16
 
-#======[MISC FUNCTIONS]====== » TO BE DONE
-
-
-
-#======[DATABASE TABLES]====== » IN DEVELOPMENT
 
 class Foodstuff(db.Model):
     id = db.Column(db.Integer, primary_key=True)

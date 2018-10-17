@@ -33,14 +33,6 @@ $ deactivate # exit our environment
 
 ## Codestyle rules
 
-Code is divided in parts with the following format:
-```
-#======[SECTION NAME]====== » SECTION STATUS (TO BE DONE / IN DEVELOPMENT / READY TO GO)
-
-the actual code with 1 line before & 1 line after
-
-```
-
 The important bits of code which should be revised later are marked with 'WARNING' as follows:
 ```
 some code here # WARNING : some notes (optional)
