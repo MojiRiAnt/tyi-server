@@ -17,7 +17,7 @@ echo -e "\e[5mPreparing your virtual environment...\e[0m"
 python3 -m venv tyi-server-env
 source tyi-server-env/bin/activate
 
-EXPECTED_ENV=$(pwd)+"tyi-server-env"
+EXPECTED_ENV=$(pwd)"/tyi-server-env"
 
 if [[ $VIRTUAL_ENV == $EXPECTED_ENV ]]
 then
