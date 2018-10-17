@@ -37,7 +37,7 @@ Code is divided in parts with the following format:
 ```
 #======[SECTION NAME]====== » SECTION STATUS (TO BE DONE / IN DEVELOPMENT / READY TO GO)
 
-the actual code with 1 line before & 2 lines after
+the actual code with 1 line before & 1 line after
 
 ```
 

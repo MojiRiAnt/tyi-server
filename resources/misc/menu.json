@@ -1,0 +1,22 @@
+[
+    {
+        "name" : "Pizza Margarita",
+        "category" : "Pizza",
+        "ingredients" : "nothing"
+    },
+    {
+        "name" : "Pizza Classic",
+        "category" : "Pizza",
+        "ingredients" : "nothing"
+    },
+    {
+        "name" : "Salad Caesar",
+        "category" : "Salads",
+        "ingredients" : "cucumber"
+    },
+    {
+        "name" : "Pepsi",
+        "category" : "Drinks",
+        "ingredients" : "bottle"
+    }
+]
