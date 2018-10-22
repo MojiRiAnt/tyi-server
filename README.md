@@ -27,9 +27,10 @@ $ deactivate # exit our environment
 
 ## Project structure
 
-|   File  |      Purpose      |
-|:-------:|:-----------------:|
-| main.py | The main app file |
+|     File    |        Purpose       |
+|:-----------:|:--------------------:|
+|   main.py   |  The main app file   |
+| database.py | Database declaration |
 
 ## Codestyle rules
 

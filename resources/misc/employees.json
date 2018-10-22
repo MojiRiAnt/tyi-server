@@ -1,0 +1,45 @@
+[
+    {
+        "name" : "Bizzarepizza Tobolska",
+        "staff" : [
+            {
+                "login" : "root",
+                "name" : "Dmytro",
+                "password" : "illl",
+                "permission" : 15
+            },
+            {
+                "login" : "Tokichi",
+                "name" : "Pasha",
+                "password" : "12345",
+                "permission" : 7
+            },
+            {
+                "login" : "chopikus",
+                "name" : "Igor",
+                "password" : "12345",
+                "permission" : 3
+            },
+            {
+                "login" : "Amanell",
+                "name" : "Nikita",
+                "password" : "12345",
+                "permission" : 1
+            },
+            {
+                "login" : "Ddenys",
+                "name" : "Denys",
+                "password" : "12345",
+                "permission" : 0
+            }
+        ]
+    },
+    {
+        "name" : "Bizzarepizza Gagarina",
+        "staff" : []
+    },
+    {
+        "name" : "Bizzarepizza Moskovskiy",
+        "staff" : []
+    }
+]
