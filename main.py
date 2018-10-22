@@ -101,7 +101,8 @@ if __name__ == '__main__':
             models = json.load(f)
 
         for cafe in models:
-            db.db.session.add(db.Cafe(name=cafe["name"]))
+            db.db.session.add(db.Cafe(name=cafe["name"],
+                                    address=cafe["address"]))
 
         db.db.session.commit()
 
