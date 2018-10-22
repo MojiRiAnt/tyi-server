@@ -1,6 +1,7 @@
 [
     {
         "name" : "Bizzarepizza Tobolska",
+        "address" : "Tobolska, 42",
         "staff" : [
             {
                 "login" : "root",
@@ -36,10 +37,12 @@
     },
     {
         "name" : "Bizzarepizza Gagarina",
+        "address" : "Gagarina, 69",
         "staff" : []
     },
     {
         "name" : "Bizzarepizza Moskovskiy",
+        "address" : "Moskovskiy, 27",
         "staff" : []
     }
 ]
