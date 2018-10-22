@@ -32,6 +32,7 @@ fi
 cd tyi-server-env
 git clone https://github.com/MojiRiAnt/tyi-server.git
 
+cd tyi-server
 pip3 install -r resources/misc/requirements.txt
 
 echo ""
