@@ -1,7 +1,7 @@
 [
     {
         "name" : "Bizzarepizza Tobolska",
-        "address" : "Tobolska, 42",
+        "address" : "vul. Tobolska, 42",
         "staff" : [
             {
                 "login" : "root",
@@ -36,13 +36,13 @@
         ]
     },
     {
-        "name" : "Bizzarepizza Gagarina",
-        "address" : "Gagarina, 69",
+        "name" : "Bizzarepizza Naukova",
+        "address" : "prosp. Nauky, 69",
         "staff" : []
     },
     {
-        "name" : "Bizzarepizza Moskovskiy",
-        "address" : "Moskovskiy, 27",
+        "name" : "Bizzarepizza Ivana Franka",
+        "address" : "vul. Ivana Franka, 27",
         "staff" : []
     }
 ]

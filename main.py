@@ -1,5 +1,6 @@
 from flask import Flask, request 
 import json
+from functools import wraps
 
 app = Flask(__name__)
 app.config.update({
@@ -23,11 +24,19 @@ def dumpResponse(response, msg_short, msg, data=None):
         "data" : data,
     }, indent=4)
 
+def checkArgs(expected_args):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not all(arg in request.args for arg in expected_args):
+                return dumpResponse(400, "NA", "Missing necessary arguments!")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 @app.route('/mng/cafe/list')
+@checkArgs(['login', 'token'])
 def mng_cafe_list():
-    expected_args = ['login', 'token']
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -39,9 +48,8 @@ def mng_cafe_list():
             ])
 
 @app.route('/mng/cafe/add')
+@checkArgs(['login', 'token', 'data'])
 def mng_cafe_add():
-    expected_args = ['login', 'token', 'data']
-
     data = json.loads(request.args['data'])
 
     with app.app_context():
@@ -52,9 +60,8 @@ def mng_cafe_add():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/cafe/edit')
+@checkArgs(['login', 'token', 'data'])
 def mng_cafe_edit():
-    expected_args = ['login', 'token', 'data']
-    
     data = json.loads(request.args['data'])
 
     with app.app_context():
@@ -67,9 +74,8 @@ def mng_cafe_edit():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/shipper/list')
+@checkArgs(['login', 'token'])
 def mng_shipper_list():
-    expected_args = ['login', 'token']
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -83,9 +89,8 @@ def mng_shipper_list():
             ])
 
 @app.route('/mng/shipper/add')
+@checkArgs(['login', 'token', 'data'])
 def mng_shipper_add():
-    expected_args = ['login', 'token', 'data']
-
     data = json.loads(request.args['data'])
 
     with app.app_context():
@@ -98,9 +103,8 @@ def mng_shipper_add():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/invoice/list')
+@checkArgs(['login', 'token'])
 def mng_invoice_list():
-    expected_args = ['login', 'token']
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -125,9 +129,8 @@ def mng_invoice_list():
             ])
 
 @app.route('/mng/invoice/add')
+@checkArgs(['login', 'token', 'data'])
 def mng_invoice_add():
-    expected_args = ['login', 'token', 'data']
-
     data = json.loads(request.args['data'])
 
     with app.app_context():
@@ -147,9 +150,8 @@ def mng_invoice_add():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/supply/list')
+@checkArgs(['login', 'token'])
 def mng_supply_list():
-    expected_args = ['login', 'token']
-
     supplies = db.Supply.query
 
     if 'cafe_id' in request.args:
@@ -194,9 +196,8 @@ def cli_dish_list():
             ])
 
 @app.route('/cli/dish/info')
+@checkArgs(['data'])
 def cli_dish_info():
-    expected_args = ['data']
-
     data = json.loads(request.args['data'])
 
     return dumpResponse(200, "OK", "Success!",
@@ -212,7 +213,8 @@ if __name__ == '__main__':
     with app.app_context():
         db.db.drop_all()
         db.db.create_all()
-        
+       
+       #LOAD Shipper
         with open('resources/misc/shippers.json') as f:
             models = json.load(f)
 
@@ -222,25 +224,62 @@ if __name__ == '__main__':
                                         contract_file=shipper["contract_file"],
                                         phone_number=shipper["phone_number"]))
 
+       #LOAD Invoice, Supply
         with open('resources/misc/invoices.json') as f:
             models = json.load(f)
 
-        for invoice in models:
-            pass
+        for data in models:
+            invoice = db.Invoice(number=data['number'],
+                                cafe_id=data['cafe_id'],
+                                shipper_id=data['shipper_id'])
+            for supply in data['supplies']:
+                invoice.supplies.append(db.Supply(amount=supply['amount'],
+                                            foodstuff_code=supply['foodstuff_code'],
+                                            cafe_id=data['cafe_id']))
+            db.db.session.add(invoice)
 
+       #LOAD Foodstuff
+        with open('resources/misc/foodstuffs.json') as f:
+            models = json.load(f)
+
+        for foodstuff in models:
+            measurement = db.Measurement.query.filter_by(unit=foodstuff['measurement']).first()
+            if measurement is None:
+                db.db.session.add(db.Measurement(unit=foodstuff['measurement']))
+            
+            db.db.session.add(db.Foodstuff(code=foodstuff['code'],
+                                            name=foodstuff['name'],
+                                            description=foodstuff['description'],
+                                            measurement_unit=foodstuff['measurement']))
+
+       #LOAD Dish, Dishcategory, Linkdishfoodstuff
         with open('resources/misc/dishes.json') as f:
             models = json.load(f)
 
         for data in models:
             category = db.Dishcategory(name=data["name"])
             for dish in data["dishes"]:
-                category.dishes.append(db.Dish(name=dish["name"],
-                                            description=dish["description"],
-                                            price=dish["price"],
-                                            amount=dish["amount"],
-                                            measurement_unit=dish["measurement"]))
+                measurement = db.Measurement.query.filter_by(unit=dish['measurement']).first()
+                if measurement is None:
+                    db.db.session.add(db.Measurement(unit=dish['measurement']))
+
+                new_dish = db.Dish(name=dish["name"],
+                                    description=dish["description"],
+                                    price=dish["price"],
+                                    amount=dish["amount"],
+                                    measurement_unit=dish["measurement"],
+                                    category_name=category.name)
+                db.db.session.add(new_dish)
+                new_dish = db.Dish.query.filter_by(name=dish["name"]).first()
+
+                for foodstuff in dish['ingredients']:
+                    db.db.session.add(db.Linkdishfoodstuff(amount=foodstuff['amount'],
+                                                        foodstuff_code=foodstuff['code'],
+                                                        dish_id=new_dish.id))
+
             db.db.session.add(category)
 
+       #LOAD Cafe, Employee
         with open('resources/misc/employees.json') as f:
             models = json.load(f)
 

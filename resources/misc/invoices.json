@@ -3,6 +3,12 @@
         "number" : "CssSD89VF89",
         "cafe_id" : 1,
         "shipper_id" : 1,
-        "supplies" : []
+        "supplies" :
+        [
+            {
+                "amount" : 20,
+                "foodstuff_code" : "ASDF87812A"
+            }
+        ]
     }
 ]

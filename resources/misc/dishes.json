@@ -8,16 +8,28 @@
                 "price" : 70,
                 "amount" : 120,
                 "measurement" : "g",
-                "ingredients" : "nothing",
-                "description" : "Such an awesome Pizza! A Pizza for Master!"
+                "description" : "Such an awesome Pizza! A Pizza for Master!",
+                "ingredients" :
+                [
+                    {
+                        "code" : "ASDF87812A",
+                        "amount" : 100
+                    }
+                ]
             },
             {
                 "name" : "Pizza Classic",
                 "price" : 65,
                 "amount" : 110,
                 "measurement" : "g",
-                "ingredients" : "nothing",
-                "description" : "Настоящий classic, я бы даже сказал pleasantly!"
+                "description" : "Настоящий classic, я бы даже сказал pleasantly!",
+                "ingredients" :
+                [
+                    {
+                        "code" : "ASDF87812A",
+                        "amount" : 100
+                    }
+                ]
             }
         ]
     },
@@ -31,8 +43,14 @@
                 "price" : 45,
                 "amount" : 65,
                 "measurement" : "g",
-                "ingredients" : "cucumber",
-                "description" : "Бенедикт Кукумбер одобряет!"
+                "description" : "Бенедикт Кукумбер одобряет!",
+                "ingredients" :
+                [
+                    {
+                        "code" : "ASDF87812A",
+                        "amount" : 100
+                    }
+                ]
             }
         ]
     },
@@ -46,8 +64,14 @@
                 "price" : 11,
                 "amount" : 500,
                 "measurement" : "ml",
-                "ingredients" : "bottle",
-                "description" : "Не только еда, но и отличная мебель."
+                "description" : "Не только еда, но и отличная мебель.",
+                "ingredients" :
+                [
+                    {
+                        "code" : "ASDF87812A",
+                        "amount" : 100
+                    }
+                ]
             }
         ]
     }
