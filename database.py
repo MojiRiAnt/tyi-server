@@ -10,6 +10,7 @@ _TEXT_SIZE = 128
 _ADDRESS_SIZE = 32
 _FILEPATH_SIZE = 16
 _MEAS_SIZE = 4
+_PHONE_SIZE = 16
 
 #================[FOOD MANAGEMENT]===============
 
@@ -17,6 +18,8 @@ class Shipper(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     contract_number = db.Column(db.String(_NUMBER_SIZE), nullable=False)
+    contract_file   = db.Column(db.String(_FILEPATH_SIZE), nullable=False)
+    phone_number    = db.Column(db.String(_PHONE_SIZE), nullable=False)
     #supplies <- Supply
 
 class Invoice(db.Model):
@@ -46,15 +49,41 @@ class Foodstuff(db.Model):
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
     #supplies <- Supply
+    #linkdishes <- Linkdishfoodstuff <- Dish
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default=-1)
-    measurement     = db.relationship('Measurement', backref=db.backref('foodstuff'), lazy=True)
+    measurement     = db.relationship('Measurement', backref=db.backref('foodstuffs'), lazy=True)
+
+class Linkdishfoodstuff(db.Model):
+    dish_id = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
+    dish = db.relationship('Dish', backref=db.backref('linkfoodstuffs'), lazy=True)
+    foodstuff_id = db.Column(db.Integer, db.ForeignKey('foodstuff.id'), default=-1)
+    foodstuff = db.relationship('Foodstuff', backref=db.backref('linkdishes'), lazy=True)
+    amount = db.Column(db.Integer, nullable=False)
+
+class Dish(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(_NAME_SIZE), nullable=False)
+    description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
+    price           = db.Column(db.Integer, nullable=False)
+    amount          = db.Column(db.Integer, nullable=False)
+    #linkfoodstuff <- Linkdishfoodstuff <- Foodstuff
+    measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default=-1)
+    measurement     = db.relationship('Measurement', backref=db.backref('dishes'), lazy=True)
+    category_name   = db.Column(db.String(_NAME_SIZE), db.ForeignKey('dishcategory.name'), default=-1)
+    category        = db.relationship('Dishcategory', backref=db.backref('dishes'), lazy=True)
+
+class Dishcategory(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(_NAME_SIZE), nullable=False, unique=True)
+    #dishes <- Dish
 
 #======================[GLOBAL]=======================
 
 class Measurement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit = db.Column(db.String(_MEAS_SIZE), nullable=False)
-    #foodstuff <- Foodstuff
+    #foodstuffs <- Foodstuff
+    #dishes <- Dish
 
 class Cafe(db.Model):
     id              = db.Column(db.Integer, primary_key=True)

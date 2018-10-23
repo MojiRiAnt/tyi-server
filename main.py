@@ -66,7 +66,6 @@ def mng_cafe_edit():
 
     return dumpResponse(200, "OK", "Success!")
 
-
 @app.route('/mng/shipper/list')
 def mng_shipper_list():
     expected_args = ['login', 'token']
@@ -77,6 +76,8 @@ def mng_shipper_list():
                     "id"                : shipper.id,
                     "name"              : shipper.name,
                     "contract_number"   : shipper.contract_number,
+                    "contract_file"     : shipper.contract_file,
+                    "phone_number"      : shipper.phone_number,
                 }
                 for shipper in db.Shipper.query.all()
             ])
@@ -89,7 +90,9 @@ def mng_shipper_add():
 
     with app.app_context():
         db.db.session.add(db.Shipper(name=data['name'],
-                                    contract_number=data['contract_number']))
+                                    contract_number=data['contract_number'],
+                                    contract_file=data['contract_file'],
+                                    phone_number=data['phone_number']))
         db.db.session.commit()
 
     return dumpResponse(200, "OK", "Success!")
@@ -143,7 +146,67 @@ def mng_invoice_add():
 
     return dumpResponse(200, "OK", "Success!")
 
-    
+@app.route('/mng/supply/list')
+def mng_supply_list():
+    expected_args = ['login', 'token']
+
+    supplies = db.Supply.query
+
+    if 'cafe_id' in request.args:
+        supplies = supplies.filter_by(cafe_id=request.args['cafe_id'])
+
+    #if 'date_start' in request.args:
+    #    supplies = supplies.filter(invoice.date > date_start)
+    #
+    #if 'date_finish' in request.args:
+    #    data = json.loads(request.args['date_finish'])
+    #    supplies = supplies.filter(invoice.date > date_finish)
+
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "expiry" : supply.expiry,
+                    "amount" : supply.amount,
+                    "cafe_id" : supply.cafe_id,
+                    "cafe_name" : supply.cafe.name,
+                    "invoice_id" : supply.invoice_id,
+                    "invoice_number" : supply.invoice.number,
+                    "name" : supply.foodstuff.name,
+                    "measurement_unit" : supply.foodstuff.measurement_unit,
+                    "code" : supply.foodstuff.code,
+                }
+                for supply in supplies.all()
+            ])
+
+@app.route('/cli/dish/list')
+def cli_dish_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id" : dish.id,
+                    "name" : dish.name,
+                    "price" : dish.price,
+                    "amount" : dish.amount,
+                    "measurement_unit" : dish.measurement_unit,
+                    "category_name" : dish.category_name,
+                }
+                for dish in db.Dish.query.all()
+            ])
+
+@app.route('/cli/dish/info')
+def cli_dish_info():
+    expected_args = ['data']
+
+    data = json.loads(request.args['data'])
+
+    return dumpResponse(200, "OK", "Success!",
+            {
+                "description" : db.Dish.query.filter_by(id=data['id']).first().description,
+            })
+
+#@app.route('/cli/order')
+
+
 if __name__ == '__main__':
 
     with app.app_context():
@@ -155,13 +218,28 @@ if __name__ == '__main__':
 
         for shipper in models:
             db.db.session.add(db.Shipper(name=shipper["name"],
-                                        contract_number=shipper["contract_number"]))
+                                        contract_number=shipper["contract_number"],
+                                        contract_file=shipper["contract_file"],
+                                        phone_number=shipper["phone_number"]))
 
         with open('resources/misc/invoices.json') as f:
             models = json.load(f)
 
         for invoice in models:
             pass
+
+        with open('resources/misc/dishes.json') as f:
+            models = json.load(f)
+
+        for data in models:
+            category = db.Dishcategory(name=data["name"])
+            for dish in data["dishes"]:
+                category.dishes.append(db.Dish(name=dish["name"],
+                                            description=dish["description"],
+                                            price=dish["price"],
+                                            amount=dish["amount"],
+                                            measurement_unit=dish["measurement"]))
+            db.db.session.add(category)
 
         with open('resources/misc/employees.json') as f:
             models = json.load(f)
@@ -171,6 +249,6 @@ if __name__ == '__main__':
                                     address=cafe["address"]))
 
         db.db.session.commit()
-
+        
     app.run(host='0.0.0.0', port='5000', debug=True) # WARNING: debug=True
 

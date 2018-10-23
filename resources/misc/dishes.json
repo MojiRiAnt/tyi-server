@@ -1,38 +1,54 @@
 [
     {
-        "name" : "Pizza Margarita",
-        "category" : "Pizza",
-        "price" : 70,
-        "amount" : 120,
-        "measurement" : "g",
-        "ingredients" : "nothing",
-        "description" : "Such an awesome Pizza! A Pizza for Master!"
+        "name" : "Pizza",
+        "dishes" :
+        [
+            {
+                "name" : "Pizza Margarita",
+                "price" : 70,
+                "amount" : 120,
+                "measurement" : "g",
+                "ingredients" : "nothing",
+                "description" : "Such an awesome Pizza! A Pizza for Master!"
+            },
+            {
+                "name" : "Pizza Classic",
+                "price" : 65,
+                "amount" : 110,
+                "measurement" : "g",
+                "ingredients" : "nothing",
+                "description" : "Настоящий classic, я бы даже сказал pleasantly!"
+            }
+        ]
     },
     {
-        "name" : "Pizza Classic",
-        "category" : "Pizza",
-        "price" : 65,
-        "amount" : 110,
-        "measurement" : "g",
-        "ingredients" : "nothing",
-        "description" : "Настоящий classic, я бы даже сказал pleasantly!"
+        "name" : "Salad",
+        "dishes" :
+        [
+            {
+                "name" : "Salad Caesar",
+                "category" : "Salads",
+                "price" : 45,
+                "amount" : 65,
+                "measurement" : "g",
+                "ingredients" : "cucumber",
+                "description" : "Бенедикт Кукумбер одобряет!"
+            }
+        ]
     },
     {
-        "name" : "Salad Caesar",
-        "category" : "Salads",
-        "price" : 45,
-        "amount" : 65,
-        "measurement" : "g",
-        "ingredients" : "cucumber",
-        "description" : "Бенедикт Кукумбер одобряет!"
-    },
-    {
-        "name" : "Pepsi",
-        "category" : "Drinks",
-        "price" : 11,
-        "amount" : 500,
-        "measurement" : "ml",
-        "ingredients" : "bottle",
-        "description" : "Не только еда, но и отличная мебель."
+        "name" : "Drinks",
+        "dishes" :
+        [
+            {
+                "name" : "Pepsi",
+                "category" : "Drinks",
+                "price" : 11,
+                "amount" : 500,
+                "measurement" : "ml",
+                "ingredients" : "bottle",
+                "description" : "Не только еда, но и отличная мебель."
+            }
+        ]
     }
 ]
