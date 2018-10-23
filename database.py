@@ -44,11 +44,17 @@ class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     code            = db.Column(db.String(_CODE_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
-    measurement     = db.Column(db.String(_MEAS_SIZE), nullable=False)
     description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
     #supplies <- Supply
+    measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default=-1)
+    measurement     = db.relationship('Measurement', backref=db.backref('foodstuff'), lazy=True)
 
 #======================[GLOBAL]=======================
+
+class Measurement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    unit = db.Column(db.String(_MEAS_SIZE), nullable=False)
+    #foodstuff <- Foodstuff
 
 class Cafe(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
