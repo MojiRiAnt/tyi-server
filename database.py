@@ -54,11 +54,12 @@ class Foodstuff(db.Model):
     measurement     = db.relationship('Measurement', backref=db.backref('foodstuffs'), lazy=True)
 
 class Linkdishfoodstuff(db.Model):
-    dish_id = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
-    dish = db.relationship('Dish', backref=db.backref('linkfoodstuffs'), lazy=True)
-    foodstuff_id = db.Column(db.Integer, db.ForeignKey('foodstuff.id'), default=-1)
-    foodstuff = db.relationship('Foodstuff', backref=db.backref('linkdishes'), lazy=True)
-    amount = db.Column(db.Integer, nullable=False)
+    id              = db.Column(db.Integer, primary_key=True)
+    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
+    dish            = db.relationship('Dish', backref=db.backref('linkfoodstuffs'), lazy=True)
+    foodstuff_id    = db.Column(db.Integer, db.ForeignKey('foodstuff.id'), default=-1)
+    foodstuff       = db.relationship('Foodstuff', backref=db.backref('linkdishes'), lazy=True)
+    amount          = db.Column(db.Integer, nullable=False)
 
 class Dish(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
