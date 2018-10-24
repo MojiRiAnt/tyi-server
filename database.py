@@ -34,7 +34,7 @@ class Shipper(db.Model):
 class Invoice(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     number          = db.Column(db.String(_NUMBER_SIZE), nullable=False)
-    date            = db.Column(db.DateTime, default=datetime.now)
+    date            = db.Column(db.String, default=datetime.now().strftime('%Y-%m-%d'))
     #supplies <- Supply
     shipper_id      = db.Column(db.Integer, db.ForeignKey('shipper.id'), default=-1)
     shipper         = db.relationship('Shipper', backref=db.backref('invoices'), lazy=True)
@@ -43,7 +43,7 @@ class Invoice(db.Model):
 
 class Supply(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
-    #expiry          = db.Column(db.DateTime, nullable=False)
+    expiry          = db.Column(db.String, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
     foodstuff_code  = db.Column(db.String(_CODE_SIZE), db.ForeignKey('foodstuff.code'), default="")
     foodstuff       = db.relationship('Foodstuff', backref=db.backref('supplies'), lazy=True)

@@ -35,6 +35,8 @@ git clone https://github.com/MojiRiAnt/tyi-server.git
 cd tyi-server
 pip3 install -r resources/misc/requirements.txt
 
+mkdir resources/private
+
 echo ""
 echo -e "\e[1;92mScript finished successfully!\e[0m"
 echo -e "\e[1mNOTE: To remove the project, simply remove the tyi-server-env directory.\e[0m"

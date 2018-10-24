@@ -7,7 +7,8 @@
         [
             {
                 "amount" : 20,
-                "foodstuff_code" : "ASDF87812A"
+                "foodstuff_code" : "ASDF87812A",
+                "expiry" : "2019-05-27"
             }
         ]
     }

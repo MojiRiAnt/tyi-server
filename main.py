@@ -238,6 +238,7 @@ if __name__ == '__main__':
             for supply in data['supplies']:
                 invoice.supplies.append(db.Supply(amount=supply['amount'],
                                             foodstuff_code=supply['foodstuff_code'],
+                                            expiry=supply['expiry'],
                                             cafe_id=data['cafe_id']))
             db.db.session.add(invoice)
 
