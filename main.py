@@ -116,14 +116,16 @@ def mng_invoice_list():
                     "shipper_name"  : invoice.shipper.name,
                     "cafe_id"       : invoice.cafe_id,
                     "cafe_name"     : invoice.cafe.name,
+                    "date"          : invoice.date,
                     "supplies"      :
                     [
                         {
-                            "code" : supply.foodstuff_code,
-                            "name" : supply.foodstuff.name,
-                            #"amount" :
-                            #"date" :
-                            #"expiry" :
+                            "id"                : supply.id,
+                            "code"              : supply.foodstuff_code,
+                            "name"              : supply.foodstuff.name,
+                            "amount"            : supply.amount,
+                            "measurement_unit"  : supply.foodstuff.measurement_unit,
+                            "expiry"            : supply.expiry,
                         }
                         for supply in invoice.supplies
                     ],
@@ -170,30 +172,45 @@ def mng_supply_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "expiry" : supply.expiry,
-                    "amount" : supply.amount,
-                    "cafe_id" : supply.cafe_id,
-                    "cafe_name" : supply.cafe.name,
-                    "invoice_id" : supply.invoice_id,
-                    "invoice_number" : supply.invoice.number,
-                    "name" : supply.foodstuff.name,
-                    "measurement_unit" : supply.foodstuff.measurement_unit,
-                    "code" : supply.foodstuff.code,
+                    "id"                : supply.id,
+                    "expiry"            : supply.expiry,
+                    "amount"            : supply.amount,
+                    "cafe_id"           : supply.cafe_id,
+                    "cafe_name"         : supply.cafe.name,
+                    "invoice_id"        : supply.invoice_id,
+                    "invoice_number"    : supply.invoice.number,
+                    "name"              : supply.foodstuff.name,
+                    "measurement_unit"  : supply.foodstuff.measurement_unit,
+                    "code"              : supply.foodstuff.code,
                 }
                 for supply in supplies.all()
             ])
+
+@app.route('/mng/supply/remove')
+@checkArgs(['login', 'token', 'data'])
+def mng_supply_remove():
+    data = json.loads(request.args['data'])
+    
+    supply = db.Supply.query.filter_by(id=data['id']).first()
+
+    if supply is None:
+        return dumpResponse(404, "NF", "Supply not found!")
+
+    db.db.session.delete(supply)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
 
 @app.route('/cli/dish/list')
 def cli_dish_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "id" : dish.id,
-                    "name" : dish.name,
-                    "price" : dish.price,
-                    "amount" : dish.amount,
-                    "measurement_unit" : dish.measurement_unit,
-                    "category_name" : dish.category_name,
+                    "id"                : dish.id,
+                    "name"              : dish.name,
+                    "price"             : dish.price,
+                    "amount"            : dish.amount,
+                    "measurement_unit"  : dish.measurement_unit,
+                    "category_name"     : dish.category_name,
                 }
                 for dish in db.Dish.query.all()
             ])
