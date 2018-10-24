@@ -203,6 +203,8 @@ def mng_supply_list():
                     "invoice_id"        : supply.invoice_id,
                     "invoice_date"      : supply.invoice.date,
                     "invoice_number"    : supply.invoice.number,
+                    "invoice_shipper_id": supply.invoice.shipper_id,
+                    "invoice_shipper_name":supply.invoice.shipper.name,
                     "name"              : supply.foodstuff.name,
                     "measurement_unit"  : supply.foodstuff.measurement_unit,
                     "code"              : supply.foodstuff.code,
@@ -230,7 +232,6 @@ def cli_dish_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "id"                : dish.id,
                     "name"              : dish.name,
                     "price"             : dish.price,
                     "amount"            : dish.amount,
