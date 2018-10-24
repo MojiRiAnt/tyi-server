@@ -1,4 +1,5 @@
 from flask import Flask, request 
+from flask_cors import CORS
 import json
 from functools import wraps
 
@@ -8,6 +9,8 @@ app.config.update({
     'SQLALCHEMY_TRACK_MODIFICATIONS' : False,
     'FLASK_ENV' : "development",
 })
+
+CORS(app)
 
 import database as db
 db.db.init_app(app)
