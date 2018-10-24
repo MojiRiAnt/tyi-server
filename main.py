@@ -1,7 +1,8 @@
-from flask import Flask, request 
+from flask      import Flask, request 
 from flask_cors import CORS
 import json
-from functools import wraps
+from datetime   import datetime
+from functools  import wraps
 
 app = Flask(__name__)
 app.config.update({
@@ -186,12 +187,11 @@ def mng_supply_list():
     if 'cafe_id' in request.args:
         supplies = supplies.filter_by(cafe_id=request.args['cafe_id'])
 
-    #if 'date_start' in request.args:
-    #    supplies = supplies.filter(invoice.date > date_start)
-    #
-    #if 'date_finish' in request.args:
-    #    data = json.loads(request.args['date_finish'])
-    #    supplies = supplies.filter(invoice.date > date_finish)
+    if 'date_start' in request.args:
+        supplies = supplies.filter(db.Supply.invoice.has(db.Invoice.date >= request.args['date_start']))
+    
+    if 'date_finish' in request.args:
+        supplies = supplies.filter(db.Supply.invoice.has(db.Invoice.date <= request.args['date_finish']))
 
     return dumpResponse(200, "OK", "Success!",
             [
@@ -202,6 +202,7 @@ def mng_supply_list():
                     "cafe_id"           : supply.cafe_id,
                     "cafe_name"         : supply.cafe.name,
                     "invoice_id"        : supply.invoice_id,
+                    "invoice_date"      : supply.invoice.date,
                     "invoice_number"    : supply.invoice.number,
                     "name"              : supply.foodstuff.name,
                     "measurement_unit"  : supply.foodstuff.measurement_unit,

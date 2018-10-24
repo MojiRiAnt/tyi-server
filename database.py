@@ -13,16 +13,27 @@ _MEAS_SIZE = 4
 _PHONE_SIZE = 16
 _EMAIL_SIZE = 16
 _TOKEN_SIZE = 16
+_DATE_SIZE = 16
 
 Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<3)}
 
 #================[USERS MANAGEMENT]===============
 
-class User(db.Model):
+class Client(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    #orders <- Order
+
+class Order(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
+    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
+    client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
+    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
+    dish            = db.relationship('Dish', backref=db.backref('orders'), lazy=True)
 
 class Employee(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -32,6 +43,7 @@ class Employee(db.Model):
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
     permission      = db.Column(db.Integer, nullable=False)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
     cafe            = db.relationship('Cafe', backref=db.backref('employees'), lazy=True)
 
@@ -48,7 +60,7 @@ class Shipper(db.Model):
 class Invoice(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     number          = db.Column(db.String(_NUMBER_SIZE), nullable=False)
-    date            = db.Column(db.String, default=datetime.now().strftime('%Y-%m-%d'))
+    date            = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     #supplies <- Supply
     shipper_id      = db.Column(db.Integer, db.ForeignKey('shipper.id'), default=-1)
     shipper         = db.relationship('Shipper', backref=db.backref('invoices'), lazy=True)
@@ -91,6 +103,7 @@ class Dish(db.Model):
     price           = db.Column(db.Integer, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
     #linkfoodstuff <- Linkdishfoodstuff <- Foodstuff
+    #orders <- Order
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
     measurement     = db.relationship('Measurement', backref=db.backref('dishes'), lazy=True)
     category_name   = db.Column(db.String(_NAME_SIZE), db.ForeignKey('dishcategory.name'), default="")
