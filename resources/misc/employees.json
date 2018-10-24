@@ -6,42 +6,50 @@
             {
                 "login" : "root",
                 "name" : "Dmytro",
-                "token" : "illl",
+                "token" : "lll",
                 "phone" : "+380123456789",
-                "email" : "test@fake.mail",
-                "permission" : 15
+                "email" : "dmytro@xlv.zero",
+                "permission" : ["Cook", "Operator", "Manager", "Admin"]
             },
             {
                 "login" : "chopikus",
                 "name" : "Igor",
                 "token" : "12345",
                 "phone" : "+380123456789",
-                "email" : "test@fake.mail",
-                "permission" : 7
+                "email" : "igor@xlv.zero",
+                "permission" : ["Cook", "Operator", "Manager", "Admin"]
             },
             {
-                "login" : "Tokichi",
-                "name" : "Pasha",
-                "token" : "12345",
+                "login" : "test_manager",
+                "name" : "Manager",
+                "token" : "3",
                 "phone" : "+380123456789",
-                "email" : "test@fake.mail",
-                "permission" : 3
+                "email" : "manager@test.mail",
+                "permission" : ["Manager"]
             },
             {
-                "login" : "Amanell",
-                "name" : "Nikita",
-                "token" : "12345",
+                "login" : "test_operator",
+                "name" : "Operator",
+                "token" : "3",
                 "phone" : "+380123456789",
-                "email" : "test@fake.mail",
-                "permission" : 1
+                "email" : "operator@test.mail",
+                "permission" : ["Operator"]
             },
             {
-                "login" : "Ddenys",
-                "name" : "Denys",
-                "token" : "12345",
+                "login" : "test_cook",
+                "name" : "Cook",
+                "token" : "3",
                 "phone" : "+380123456789",
-                "email" : "test@fake.mail",
-                "permission" : 0
+                "email" : "cook@test.mail",
+                "permission" : ["Cook"]
+            },
+            {
+                "login" : "test_noone",
+                "name" : "Noone",
+                "token" : "3",
+                "phone" : "+380123456789",
+                "email" : "noone@test.mail",
+                "permission" : []
             }
         ]
     },

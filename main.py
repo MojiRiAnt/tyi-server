@@ -17,6 +17,7 @@ db.db.init_app(app)
 
 
 def dumpResponse(response, msg_short, msg, data=None):
+    print("Query answered with {} {}".format(response, msg_short))
     return json.dumps({
         "status":
         {
@@ -332,11 +333,12 @@ if __name__ == '__main__':
             cafe = db.Cafe(name=data["name"],
                         address=data["address"])
             for emp in data["staff"]:
+                perm = sum(db.Role[x] for x in emp["permission"])
                 cafe.employees.append(db.Employee(login=emp["login"],
                                                 token=emp["token"],
                                                 phone=emp["phone"],
                                                 email=emp["email"],
-                                                permission=emp["permission"]))
+                                                permission=perm))
             db.db.session.add(cafe)
 
         db.db.session.commit()
