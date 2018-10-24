@@ -6,31 +6,41 @@
             {
                 "login" : "root",
                 "name" : "Dmytro",
-                "password" : "illl",
+                "token" : "illl",
+                "phone" : "+380123456789",
+                "email" : "test@fake.mail",
                 "permission" : 15
             },
             {
                 "login" : "Tokichi",
                 "name" : "Pasha",
-                "password" : "12345",
+                "token" : "12345",
+                "phone" : "+380123456789",
+                "email" : "test@fake.mail",
                 "permission" : 7
             },
             {
                 "login" : "chopikus",
                 "name" : "Igor",
-                "password" : "12345",
+                "token" : "12345",
+                "phone" : "+380123456789",
+                "email" : "test@fake.mail",
                 "permission" : 3
             },
             {
                 "login" : "Amanell",
                 "name" : "Nikita",
-                "password" : "12345",
+                "token" : "12345",
+                "phone" : "+380123456789",
+                "email" : "test@fake.mail",
                 "permission" : 1
             },
             {
                 "login" : "Ddenys",
                 "name" : "Denys",
-                "password" : "12345",
+                "token" : "12345",
+                "phone" : "+380123456789",
+                "email" : "test@fake.mail",
                 "permission" : 0
             }
         ]

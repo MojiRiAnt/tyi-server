@@ -86,7 +86,7 @@ def mng_shipper_list():
                     "name"              : shipper.name,
                     "contract_number"   : shipper.contract_number,
                     "contract_file"     : shipper.contract_file,
-                    "phone_number"      : shipper.phone_number,
+                    "phone"             : shipper.phone,
                 }
                 for shipper in db.Shipper.query.all()
             ])
@@ -100,7 +100,7 @@ def mng_shipper_add():
         db.db.session.add(db.Shipper(name=data['name'],
                                     contract_number=data['contract_number'],
                                     contract_file=data['contract_file'],
-                                    phone_number=data['phone_number']))
+                                    phone=data['phone']))
         db.db.session.commit()
 
     return dumpResponse(200, "OK", "Success!")
@@ -242,7 +242,7 @@ if __name__ == '__main__':
             db.db.session.add(db.Shipper(name=shipper["name"],
                                         contract_number=shipper["contract_number"],
                                         contract_file=shipper["contract_file"],
-                                        phone_number=shipper["phone_number"]))
+                                        phone=shipper["phone"]))
 
        #LOAD Invoice, Supply
         with open('resources/misc/invoices.json') as f:
@@ -304,9 +304,16 @@ if __name__ == '__main__':
         with open('resources/misc/employees.json') as f:
             models = json.load(f)
 
-        for cafe in models:
-            db.db.session.add(db.Cafe(name=cafe["name"],
-                                    address=cafe["address"]))
+        for data in models:
+            cafe = db.Cafe(name=data["name"],
+                        address=data["address"])
+            for emp in data["staff"]:
+                cafe.employees.append(db.Employee(login=emp["login"],
+                                                token=emp["token"],
+                                                phone=emp["phone"],
+                                                email=emp["email"],
+                                                permission=emp["permission"]))
+            db.db.session.add(cafe)
 
         db.db.session.commit()
         

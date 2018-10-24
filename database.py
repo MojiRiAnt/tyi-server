@@ -11,15 +11,29 @@ _ADDRESS_SIZE = 32
 _FILEPATH_SIZE = 16
 _MEAS_SIZE = 4
 _PHONE_SIZE = 16
+_EMAIL_SIZE = 16
 _TOKEN_SIZE = 16
 
-#================[STAFF MANAGEMENT]===============
+Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<3)}
+
+#================[USERS MANAGEMENT]===============
+
+class User(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(_NAME_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
 
 class Employee(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(_NAME_SIZE), nullable=False)
-    token = db.Column(db.String(_TOKEN_SIZE), nullable=False)
-    #permission
+    id              = db.Column(db.Integer, primary_key=True)
+    login           = db.Column(db.String(_NAME_SIZE), nullable=False)
+    #password        = db.Column(db.String(_PASSWORD_SIZE), nullable=False)
+    token           = db.Column(db.String(_TOKEN_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
+    permission      = db.Column(db.Integer, nullable=False)
+    cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
+    cafe            = db.relationship('Cafe', backref=db.backref('employees'), lazy=True)
 
 #================[FOOD MANAGEMENT]===============
 
@@ -28,7 +42,7 @@ class Shipper(db.Model):
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     contract_number = db.Column(db.String(_NUMBER_SIZE), nullable=False)
     contract_file   = db.Column(db.String(_FILEPATH_SIZE), nullable=False)
-    phone_number    = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
     #supplies <- Supply
 
 class Invoice(db.Model):
@@ -102,4 +116,5 @@ class Cafe(db.Model):
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
     #invoices <- Invoice
     #supplies <- Supply
+    #employees <- Employee
 

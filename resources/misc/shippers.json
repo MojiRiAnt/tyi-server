@@ -3,78 +3,78 @@
         "name" : "Nasha Ryaba",
         "contract_number" : "012323548",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Holland Cheese and Co",
         "contract_number" : "234923745",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Obolonska",
         "contract_number" : "348723412",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Mondelez",
         "contract_number" : "123489612",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Kurgansky Myasokombinat",
         "contract_number" : "238472342",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Chumak",
         "contract_number" : "238942346",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "United Vegetables",
         "contract_number" : "467423423",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "United Fruits",
         "contract_number" : "564345643",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Pepsi Ukraine",
         "contract_number": "000FG74",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Kharkivskiy Myasokombinat",
         "contract_number" : "ASDFG12345",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "OKZDH",
         "contract_number" : "CNTRCT103",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "Ukrainian Pomidors",
         "contract_number" : "001235538",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     },
     {
         "name" : "XLV.Zero",
         "contract_number" : "ostashevloh",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
-        "phone_number" : "+380123456789"
+        "phone" : "+380123456789"
     }
 ]
