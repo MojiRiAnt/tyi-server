@@ -12,16 +12,16 @@
                 "permission" : 15
             },
             {
-                "login" : "Tokichi",
-                "name" : "Pasha",
+                "login" : "chopikus",
+                "name" : "Igor",
                 "token" : "12345",
                 "phone" : "+380123456789",
                 "email" : "test@fake.mail",
                 "permission" : 7
             },
             {
-                "login" : "chopikus",
-                "name" : "Igor",
+                "login" : "Tokichi",
+                "name" : "Pasha",
                 "token" : "12345",
                 "phone" : "+380123456789",
                 "email" : "test@fake.mail",

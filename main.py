@@ -37,8 +37,24 @@ def checkArgs(expected_args):
         return wrapper
     return decorator
 
+def checkEmployee(permission):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            emp = db.Employee.query.filter_by(login=request.args['login']).first()
+            if emp is None:
+                return dumpResponse(404, "NF", "No employee found!")
+            if emp.token != request.args['token']:
+                return dumpResponse(401, "NA", "Incorrect token!")
+            if (permission & emp.permission) != permission:
+                return dumpResponse(403, "NA", "Permission denied!")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 @app.route('/mng/cafe/list')
 @checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
 def mng_cafe_list():
     return dumpResponse(200, "OK", "Success!",
             [
@@ -52,6 +68,7 @@ def mng_cafe_list():
 
 @app.route('/mng/cafe/add')
 @checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
 def mng_cafe_add():
     data = json.loads(request.args['data'])
 
@@ -64,6 +81,7 @@ def mng_cafe_add():
 
 @app.route('/mng/cafe/edit')
 @checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
 def mng_cafe_edit():
     data = json.loads(request.args['data'])
 
@@ -78,6 +96,7 @@ def mng_cafe_edit():
 
 @app.route('/mng/shipper/list')
 @checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
 def mng_shipper_list():
     return dumpResponse(200, "OK", "Success!",
             [
@@ -93,6 +112,7 @@ def mng_shipper_list():
 
 @app.route('/mng/shipper/add')
 @checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
 def mng_shipper_add():
     data = json.loads(request.args['data'])
 
@@ -107,6 +127,7 @@ def mng_shipper_add():
 
 @app.route('/mng/invoice/list')
 @checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
 def mng_invoice_list():
     return dumpResponse(200, "OK", "Success!",
             [
@@ -135,6 +156,7 @@ def mng_invoice_list():
 
 @app.route('/mng/invoice/add')
 @checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
 def mng_invoice_add():
     data = json.loads(request.args['data'])
 
@@ -156,6 +178,7 @@ def mng_invoice_add():
 
 @app.route('/mng/supply/list')
 @checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
 def mng_supply_list():
     supplies = db.Supply.query
 
@@ -188,6 +211,7 @@ def mng_supply_list():
 
 @app.route('/mng/supply/remove')
 @checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
 def mng_supply_remove():
     data = json.loads(request.args['data'])
     
