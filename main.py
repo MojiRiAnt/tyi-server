@@ -18,7 +18,6 @@ db.db.init_app(app)
 
 
 def dumpResponse(response, msg_short, msg, data=None):
-    print("Query answered with {} {}".format(response, msg_short))
     return json.dumps({
         "status":
         {
