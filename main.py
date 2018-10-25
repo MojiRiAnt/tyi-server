@@ -261,6 +261,23 @@ def mng_foodstuff_info():
                     "measurement_unit"  : foodstuff.measurement_unit,
                 })
 
+@app.route('/adm/client/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Admin'])
+def adm_client_list():
+    return dumpResponse(200, "OK", "Success!",
+                [
+                    {
+                        "phone"             : cli.phone,
+                        "email"             : cli.email,
+                        "secret"            : cli.secret,
+                        "name"              : cli.name,
+                        "registered_date"   : cli.registered_date,
+                        "verified"          : cli.verified,
+                    }
+                    for cli in db.Client.query.all()
+                ])
+
 @app.route('/cli/dish/list')
 @checkArgs(['phone', 'secret'])
 @checkClient()
@@ -305,9 +322,89 @@ def cli_dish_info():
 @app.route('/cli/auth/try')
 @checkArgs(['phone'])
 def cli_auth_try():
-    cli = db.Client.query.filter_by(phone=data['phone'])
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     
-    return "IN DEVELOPMENT"
+    if cli is None:
+        db.db.session.add(db.Client(phone=request.args['phone'],
+                                    name="",
+                                    email="",
+                                    secret=4, #WARNING : generate new secret here
+                                    ))
+        db.db.session.commit()
+
+        #WARNING : send SMS with secret here
+
+        return dumpResponse(200, "OK", "Success!",
+                {
+                    "found" : False, 
+                })
+
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "found" : True,    
+                })
+
+@app.route('/cli/auth/new')
+@checkArgs(['phone', 'secret', 'name'])
+@checkClient()
+def cli_auth_new():
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+
+    if cli.verified:
+        return dumpResponse(403, "NA", "Client already verified!")
+
+    if request.args['secret'] != cli.secret:
+        return dumpResponse(401, "NA", "Incorrect secret!")
+
+    if not db.Client.isValidName(request.args['name']):
+        return dumpResponse(403, "NA", "Forbidden info!")
+
+    cli.name = request.args['name']
+    cli.verified = True
+    
+    db.db.session.commit()
+
+    #WARNING : generate new secret here
+
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "phone" : cli.phone,
+                    "name"  : cli.name,
+                    "email" : cli.email,
+                    })
+
+@app.route('/cli/auth/login')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_auth():
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    
+    if not cli.verified:
+        return dumpResponse(403, "NA", "Client is not verified!")
+
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "phone" : cli.phone,
+                    "name"  : cli.name,
+                    "email" : cli.email,
+                })
+
+@app.route('/cli/update')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_update():
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    updated = {'name':False, 'email':False}
+    if 'name' in request.args and db.Client.isValidName(request.args['name']):
+        cli.name = request.args['name']
+        updated['name'] = True
+    if 'email' in request.args and db.Client.isValidEmail(request.args['email']):
+        cli.email = request.args['email']
+        updated['email'] = True
+
+    db.db.session.commit()
+
+    return dumpResponse(200, "OK", "Success!", updated)
 
 #@app.route('/cli/order')
 

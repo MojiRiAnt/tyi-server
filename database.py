@@ -27,7 +27,22 @@ class Client(db.Model):
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    verified        = db.Column(db.Boolean, default=False, nullable=False)
     #orders <- Order
+
+    @classmethod
+    def isValidName(cls, name):
+        if name == "":
+            return False
+        else:
+            return True
+
+    @classmethod
+    def isValidEmail(cls, email):
+        if email == "":
+            return False
+        else:
+            return True
 
 class Order(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
