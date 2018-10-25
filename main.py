@@ -240,26 +240,90 @@ def mng_supply_remove():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
+@app.route('/mng/foodstuff/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuff_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"                : foodstuff.id,
+                    "code"              : foodstuff.code,
+                    "name"              : foodstuff.name,
+                    "description"       : foodstuff.description,
+                    "measurement_unit"  : foodstuff.measurement_unit,
+                }
+                for foodstuff in db.Foodstuff.query.all()
+            ])
+
+@app.route('/mng/foodstuff/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuff_add():
+    data = json.loads(request.args['data'])
+
+    db.db.session.add(db.Foodstuff(code=data["code"],
+                                    name=data["name"],
+                                    description=data["description"],
+                                    measurement_unit=data["measurement_unit"]))
+
+    db.db.session.commit()
+
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/foodstuff/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuff_edit():
+    data = json.loads(request.args['data'])
+
+    foodstuff = db.Foodstuff.query.filter_by(id=data["id"]).first()
+
+    if foodstuff is None:
+        return dumpResponse(404, "NF", "No foodstuff found!")
+
+    foodstuff.code=data["code"]
+    foodstuff.name=data["name"]
+    foodstuff.description=data["description"]
+    foodstuff.measurement_unit=data["measurement_unit"]
+
+    db.db.session.commit()
+
+    return dumpResponse(200, "OK", "Success!")
+
 @app.route('/mng/foodstuff/info')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Manager'])
 def mng_foodstuff_info():
     data = json.loads(request.args['data'])
-
+    
     foodstuff = db.Foodstuff.query.filter_by(code=data['code']).first()
-
+    
     if foodstuff is None:
         return dumpResponse(200, "OK", "Success!",
                 {
                     "found" : False,    
                 })
-
+    
     return dumpResponse(200, "OK", "Success!",
                 {
                     "found"             : True,
                     "name"              : foodstuff.name,
                     "measurement_unit"  : foodstuff.measurement_unit,
                 })
+
+@app.route('/mng/measurement/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
+def mng_measurement_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"    : measurement.id,
+                    "unit"  : measurement.unit,
+                }
+                for measurement in db.Measurement.query.all()
+            ])
 
 @app.route('/adm/emptyclient/list')
 @checkArgs(['login', 'token'])
