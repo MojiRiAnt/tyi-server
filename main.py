@@ -53,6 +53,19 @@ def checkEmployee(permission):
         return wrapper
     return decorator
 
+def checkClient():
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+            if cli is None:
+                return dumpResponse(404, "NF", "No client found!")
+            if cli.secret != request.args['secret']:
+                return dumpResponse(401, "NA", "Incorrect secret!")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 @app.route('/mng/cafe/list')
 @checkArgs(['login', 'token'])
 @checkEmployee(db.Role['Manager'])
@@ -227,7 +240,30 @@ def mng_supply_remove():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
+@app.route('/mng/foodstuff/info')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuff_info():
+    data = json.loads(request.args['data'])
+
+    foodstuff = db.Foodstuff.query.filter_by(code=data['code']).first()
+
+    if foodstuff is None:
+        return dumpResponse(200, "OK", "Success!",
+                {
+                    "found" : False,    
+                })
+
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "found"             : True,
+                    "name"              : foodstuff.name,
+                    "measurement_unit"  : foodstuff.measurement_unit,
+                })
+
 @app.route('/cli/dish/list')
+@checkArgs(['phone', 'secret'])
+@checkClient()
 def cli_dish_list():
     return dumpResponse(200, "OK", "Success!",
             [
@@ -242,14 +278,36 @@ def cli_dish_list():
             ])
 
 @app.route('/cli/dish/info')
-@checkArgs(['data'])
+@checkArgs(['phone', 'secret', 'data'])
+@checkClient()
 def cli_dish_info():
     data = json.loads(request.args['data'])
 
+    dish = db.Dish.query.filter_by(id=data['id']).first()
+    if dish is None:
+        return dumpResponse(404, "NF", "No dish found!")
+
     return dumpResponse(200, "OK", "Success!",
             {
-                "description" : db.Dish.query.filter_by(id=data['id']).first().description,
+                "description" : dish.description,
+                "ingredients" :
+                [
+                    {
+                        "amount"            : ing.amount,
+                        "code"              : ing.foodstuff.code,
+                        "name"              : ing.foodstuff.name,
+                        "measurement_unit"  : ing.foodstuff.measurement_unit,
+                    }
+                    for ing in db.Linkdishfoodstuff.query.filter_by(dish_id=dish.id)
+                ],
             })
+
+@app.route('/cli/auth/try')
+@checkArgs(['phone'])
+def cli_auth_try():
+    cli = db.Client.query.filter_by(phone=data['phone'])
+    
+    return "IN DEVELOPMENT"
 
 #@app.route('/cli/order')
 
@@ -334,12 +392,11 @@ if __name__ == '__main__':
             cafe = db.Cafe(name=data["name"],
                         address=data["address"])
             for emp in data["staff"]:
-                perm = sum(db.Role[x] for x in emp["permission"])
                 cafe.employees.append(db.Employee(login=emp["login"],
                                                 token=emp["token"],
                                                 phone=emp["phone"],
                                                 email=emp["email"],
-                                                permission=perm))
+                                                permission=sum(db.Role[x] for x in emp["permission"])))
             db.db.session.add(cafe)
 
         db.db.session.commit()

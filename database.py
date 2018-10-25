@@ -14,6 +14,7 @@ _PHONE_SIZE = 16
 _EMAIL_SIZE = 16
 _TOKEN_SIZE = 16
 _DATE_SIZE = 16
+_SECRET_SIZE = 16
 
 Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<3)}
 
@@ -21,8 +22,9 @@ Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<
 
 class Client(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
-    name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    secret          = db.Column(db.String(_SECRET_SIZE), nullable=False)
+    name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     #orders <- Order
@@ -55,6 +57,7 @@ class Shipper(db.Model):
     contract_number = db.Column(db.String(_NUMBER_SIZE), nullable=False)
     contract_file   = db.Column(db.String(_FILEPATH_SIZE), nullable=False)
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     #supplies <- Supply
 
 class Invoice(db.Model):
