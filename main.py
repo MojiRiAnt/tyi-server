@@ -368,6 +368,7 @@ def cli_dish_list():
                     "amount"            : dish.amount,
                     "measurement_unit"  : dish.measurement_unit,
                     "category_name"     : dish.category_name,
+                    "cooking_time"      : dish.cooking_time,
                 }
                 for dish in db.Dish.query.all()
             ])
@@ -483,7 +484,7 @@ def cli_update():
     return dumpResponse(200, "OK", "Success!", updated)
 
 @app.route('/cli/order')
-@checkArgs(['phone', 'secret', 'data'])
+@checkArgs(['phone', 'secret', 'address', 'data'])
 @checkClient()
 def cli_order():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
@@ -492,9 +493,65 @@ def cli_order():
     except Exception as e:
         return dumpResponse(400, "ER", "Invalid JSON!")
 
-    #WARNING : Add order here
+    dishes = ' '.join(str(dish["id"])+':'+str(dish["amount"]) for dish in data) # WARNING : No json validity checker
+
+    cli = db.Client.query.filter_by(phone=request.args["phone"]).first()
+
+    db.db.session.add(db.Maybeorder(address=request.args["address"],
+                                    client_id=cli.id,
+                                    dishes=dishes))
+    db.db.session.commit()
 
     return dumpResponse(200, "OK", "Success!")
+
+@app.route('/opr/maybeorder/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Operator'])
+def opr_maybeorder_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"            : maybeorder.id,
+                    "address"       : maybeorder.address,
+                    "client_id"     : maybeorder.client_id,
+                    "client_phone"  : maybeorder.client.phone,
+                    "dishes"        : maybeorder.dishes,
+                }
+                for maybeorder in db.Maybeorder.query.all()
+            ])
+
+@app.route('/opr/maybeorder/approve')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_maybeorder_approve():
+    data = json.loads(request.args['data'])
+
+    maybeorder = db.Maybeorder.query().filter_by(id=data["id"]).first()
+    
+    if maybeorder is None:
+        return dumpResponse(404, "NF", "No maybeorder found!")
+
+    #WARNING : Add order here
+
+    db.db.session.delete(maybeorder)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Nothing done…")
+
+@app.route('/opr/dish/info')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_dish_info():
+    data = json.loads(request.args['data'])
+
+    dish = db.Dish.query.filter_by(id=data['id']).first()
+    if dish is None:
+        return dumpResponse(404, "NF", "No dish found!")
+
+    return dumpResponse(200, "OK", "Success!",
+            {
+                "name" : dish.name,
+                "cooking_time" : dish.cooking_time,
+            })
 
 if __name__ == '__main__':
 
@@ -557,6 +614,7 @@ if __name__ == '__main__':
                                     price=dish["price"],
                                     amount=dish["amount"],
                                     measurement_unit=dish["measurement"],
+                                    cooking_time=dish["cooking_time"],
                                     category_name=category.name)
                 db.db.session.add(new_dish)
                 new_dish = db.Dish.query.filter_by(name=dish["name"]).first()

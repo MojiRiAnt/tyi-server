@@ -8,6 +8,7 @@
                 "price" : 70,
                 "amount" : 120,
                 "measurement" : "g",
+                "cooking_time" : 10,
                 "description" : "Such an awesome Pizza! A Pizza for Master!",
                 "ingredients" :
                 [
@@ -22,6 +23,7 @@
                 "price" : 65,
                 "amount" : 110,
                 "measurement" : "g",
+                "cooking_time" : 10,
                 "description" : "Настоящий classic, я бы даже сказал pleasantly!",
                 "ingredients" :
                 [
@@ -43,6 +45,7 @@
                 "price" : 45,
                 "amount" : 65,
                 "measurement" : "g",
+                "cooking_time" : 5,
                 "description" : "Бенедикт Кукумбер одобряет!",
                 "ingredients" :
                 [
@@ -64,6 +67,7 @@
                 "price" : 11,
                 "amount" : 500,
                 "measurement" : "ml",
+                "cooking_time" : 1,
                 "description" : "Не только еда, но и отличная мебель.",
                 "ingredients" :
                 [

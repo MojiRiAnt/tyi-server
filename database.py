@@ -15,8 +15,26 @@ _EMAIL_SIZE = 16
 _TOKEN_SIZE = 16
 _DATE_SIZE = 16
 _SECRET_SIZE = 16
+_DISHESLIST_SIZE = 256
 
 Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<3)}
+
+#================[ORDERS MANAGEMENT]==============
+
+class Maybeorder(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
+    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
+    client          = db.relationship('Client', backref=db.backref('maybeorders'), lazy=True)
+    dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
+
+class Order(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
+    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
+    client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
+    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
+    dish            = db.relationship('Dish', backref=db.backref('orders'), lazy=True)
 
 #================[USERS MANAGEMENT]===============
 
@@ -33,6 +51,7 @@ class Client(db.Model):
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False, unique=True, default="")
     registered_date = db.Column(db.String(_DATE_SIZE))
+    #maybeorders <- Maybeorder
     #orders <- Order
 
     @classmethod
@@ -48,14 +67,6 @@ class Client(db.Model):
             return False
         else:
             return True
-
-class Order(db.Model):
-    id              = db.Column(db.Integer, primary_key=True)
-    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
-    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
-    client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
-    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
-    dish            = db.relationship('Dish', backref=db.backref('orders'), lazy=True)
 
 class Employee(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -125,6 +136,7 @@ class Dish(db.Model):
     description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
     price           = db.Column(db.Integer, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
+    cooking_time    = db.Column(db.Integer, nullable=False) 
     #linkfoodstuff <- Linkdishfoodstuff <- Foodstuff
     #orders <- Order
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
