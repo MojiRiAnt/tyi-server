@@ -261,6 +261,20 @@ def mng_foodstuff_info():
                     "measurement_unit"  : foodstuff.measurement_unit,
                 })
 
+@app.route('/adm/emptyclient/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Admin'])
+def adm_emptyclient_list():
+    return dumpResponse(200, "OK", "Success!",
+                [
+                    {
+                        "phone"             : cli.phone,
+                        "secret"            : cli.secret,
+                        "registered_date"   : cli.registered_date,
+                    }
+                    for cli in db.Emptyclient.query.all()
+                ])
+
 @app.route('/adm/client/list')
 @checkArgs(['login', 'token'])
 @checkEmployee(db.Role['Admin'])
@@ -273,7 +287,6 @@ def adm_client_list():
                         "secret"            : cli.secret,
                         "name"              : cli.name,
                         "registered_date"   : cli.registered_date,
-                        "verified"          : cli.verified,
                     }
                     for cli in db.Client.query.all()
                 ])
@@ -319,17 +332,14 @@ def cli_dish_info():
                 ],
             })
 
-@app.route('/cli/auth/try')
+@app.route('/cli/auth/add')
 @checkArgs(['phone'])
 def cli_auth_try():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     
     if cli is None:
-        db.db.session.add(db.Client(phone=request.args['phone'],
-                                    name="",
-                                    email="",
-                                    secret=4, #WARNING : generate new secret here
-                                    ))
+        db.db.session.add(db.Emptyclient(phone=request.args['phone'],
+                                    secret=4)) #WARNING : generate new secret here
         db.db.session.commit()
 
         #WARNING : send SMS with secret here
@@ -346,21 +356,24 @@ def cli_auth_try():
 
 @app.route('/cli/auth/new')
 @checkArgs(['phone', 'secret', 'name'])
-@checkClient()
 def cli_auth_new():
-    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    ecli = db.Emptyclient.query.filter_by(phone=request.args['phone']).first()
 
-    if cli.verified:
-        return dumpResponse(403, "NA", "Client already verified!")
+    if ecli is None:
+        return dumpResponse(404, "NF", "Emptyclient not found!")
 
-    if request.args['secret'] != cli.secret:
+    if request.args['secret'] != ecli.secret:
         return dumpResponse(401, "NA", "Incorrect secret!")
 
     if not db.Client.isValidName(request.args['name']):
         return dumpResponse(403, "NA", "Forbidden info!")
 
-    cli.name = request.args['name']
-    cli.verified = True
+    cli = db.Client(phone = ecli.phone,
+                    secret = ecli.secret,
+                    name = request.args['name'],
+                    registered_date = ecli.registered_date)
+    db.db.session.add(cli)
+    db.db.session.delete(ecli)
     
     db.db.session.commit()
 
@@ -371,7 +384,7 @@ def cli_auth_new():
                     "phone" : cli.phone,
                     "name"  : cli.name,
                     "email" : cli.email,
-                    })
+                })
 
 @app.route('/cli/auth/login')
 @checkArgs(['phone', 'secret'])
@@ -379,9 +392,6 @@ def cli_auth_new():
 def cli_auth():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     
-    if not cli.verified:
-        return dumpResponse(403, "NA", "Client is not verified!")
-
     return dumpResponse(200, "OK", "Success!",
                 {
                     "phone" : cli.phone,
@@ -406,8 +416,19 @@ def cli_update():
 
     return dumpResponse(200, "OK", "Success!", updated)
 
-#@app.route('/cli/order')
+@app.route('/cli/order')
+@checkArgs(['phone', 'secret', 'data'])
+@checkClient()
+def cli_order():
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    try:
+        data = json.loads(request.args['data'])
+    except Exception as e:
+        return dumpResponse(400, "ER", "Invalid JSON!")
 
+    #WARNING : Add order here
+
+    return dumpResponse(200, "OK", "Success!")
 
 if __name__ == '__main__':
 

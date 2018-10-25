@@ -20,14 +20,19 @@ Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<
 
 #================[USERS MANAGEMENT]===============
 
+class Emptyclient(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False, unique=True)
+    secret          = db.Column(db.String(_SECRET_SIZE), nullable=False)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    
 class Client(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
-    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False, unique=True)
     secret          = db.Column(db.String(_SECRET_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
-    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
-    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
-    verified        = db.Column(db.Boolean, default=False, nullable=False)
+    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False, unique=True, default="")
+    registered_date = db.Column(db.String(_DATE_SIZE))
     #orders <- Order
 
     @classmethod
