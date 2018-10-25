@@ -298,6 +298,7 @@ def cli_dish_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
+                    "id"                : dish.id,
                     "name"              : dish.name,
                     "price"             : dish.price,
                     "amount"            : dish.amount,
@@ -336,8 +337,9 @@ def cli_dish_info():
 @checkArgs(['phone'])
 def cli_auth_try():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
-    
-    if cli is None:
+    ecli = db.Emptyclient.query.filter_by(phone=request.args['phone']).first()
+
+    if cli is None and ecli is None:
         db.db.session.add(db.Emptyclient(phone=request.args['phone'],
                                     secret=4)) #WARNING : generate new secret here
         db.db.session.commit()
