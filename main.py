@@ -441,7 +441,7 @@ def cli_order_list():
                 {
                     "id"        : order.id,
                     "address"   : order.address,
-                    "dish_id"   : order.dish_id,
+                    "dishes"    : order.dishes,
                 }
                 for order in db.Order.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
