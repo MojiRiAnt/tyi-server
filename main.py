@@ -428,7 +428,7 @@ def cli_maybeorder_list():
                     "address"   : maybeorder.address,
                     "dishes"    : maybeorder.dishes,
                 }
-                for maybeorder in db.Maybeorder.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
+                for maybeorder in db.Maybeorder.query.filter(db.Maybeorder.client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/order/list')
