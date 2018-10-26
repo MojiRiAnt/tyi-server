@@ -616,6 +616,8 @@ def opr_order_list():
                         "client_phone"  : prder.client.phone,
                         "dish_id"       : order.dish_id,
                         "dish_name"     : order.dish.name,
+                        "employee_id"   : order.employee_id,
+                        "employee_name" : order.employee.name,
                     }
                     for order in db.Order.query.all()
                 ])
