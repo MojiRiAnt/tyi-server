@@ -35,6 +35,8 @@ class Order(db.Model):
     client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
     dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
     dish            = db.relationship('Dish', backref=db.backref('orders'), lazy=True)
+    employee_id     = db.Column(db.Integer, db.ForeignKey('employee.id'), default=-1)
+    employee        = db.relationship('Employee', backref=db.backref('orders'), lazy=True)
 
 #================[USERS MANAGEMENT]===============
 

@@ -588,6 +588,21 @@ def opr_maybeorder_approve():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
+@app.route('/opr/maybeorder/decline')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_maybeorder_decline():
+    data = json.loads(request.args['data'])
+
+    maybeorder = db.Maybeorder.query().filter_by(id=data["id"]).first()
+    
+    if maybeorder is None:
+        return dumpResponse(404, "NF", "No maybeorder found!")
+
+    db.db.session.delete(maybeorder)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
 @app.route('/opr/order/list')
 @checkArgs(['login', 'token'])
 @checkClient()
