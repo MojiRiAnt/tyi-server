@@ -1,10 +1,10 @@
 [
     {
-        "name" : "Pizza",
+        "name" : "Пицца",
         "dishes" :
         [
             {
-                "name" : "Pizza Margarita",
+                "name" : "Пицца Маргарита",
                 "price" : 70,
                 "amount" : 120,
                 "measurement" : "g",
@@ -19,7 +19,7 @@
                 ]
             },
             {
-                "name" : "Pizza Classic",
+                "name" : "Пицца Классик",
                 "price" : 65,
                 "amount" : 110,
                 "measurement" : "g",
@@ -36,7 +36,7 @@
         ]
     },
     {
-        "name" : "Salad",
+        "name" : "Салат",
         "dishes" :
         [
             {
@@ -58,7 +58,7 @@
         ]
     },
     {
-        "name" : "Drinks",
+        "name" : "Напитки",
         "dishes" :
         [
             {
