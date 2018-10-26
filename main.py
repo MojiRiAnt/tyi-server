@@ -356,6 +356,11 @@ def adm_client_list():
 @checkArgs(['phone', 'secret'])
 @checkClient()
 def cli_dish_list():
+    dishes = db.Dish.query
+
+    if 'category' in request.args:
+        dishes = dishes.filter_by(category_name=request.args['category'])
+
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -367,7 +372,7 @@ def cli_dish_list():
                     "category_name"     : dish.category_name,
                     "cooking_time"      : dish.cooking_time,
                 }
-                for dish in db.Dish.query.all()
+                for dish in dishes
             ])
 
 @app.route('/cli/dish/info')
@@ -394,6 +399,13 @@ def cli_dish_info():
                     for ing in db.Linkdishfoodstuff.query.filter_by(dish_id=dish.id)
                 ],
             })
+
+@app.route('/cli/dishcategory/list')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_dishcategory_list():
+    return dumpResponse(200, "OK", "Success!",
+            [cat.name for cat in db.Dishcategory.query.all()])
 
 @app.route('/cli/maybeorder/list')
 @checkArgs(['phone', 'secret'])
@@ -554,11 +566,33 @@ def opr_maybeorder_approve():
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
 
-    #WARNING : Add order here
+    for dish in maybeorder.dishes.split():
+        id, amount = dish.split(':')
+        for i in range(amount):
+            db.db.session.add(db.Order(address=maybeorder.address,
+                                        client_id=maybeorder.client_id,
+                                        dish_id=maybeorder.id))
 
     db.db.session.delete(maybeorder)
     db.db.session.commit()
-    return dumpResponse(200, "OK", "Nothing done…")
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/opr/order/list')
+@checkArgs(['login', 'token'])
+@checkClient()
+def opr_order_list():
+    return dumpResponse(200, "OK", "Success!",
+                [
+                    {
+                        "id"            : order.id,
+                        "address"       : order.address,
+                        "client_id"     : order.client_id,
+                        "client_phone"  : prder.client.phone,
+                        "dish_id"       : order.dish_id,
+                        "dish_name"     : order.dish.name,
+                    }
+                    for order in db.Order.query.all()
+                ])
 
 @app.route('/opr/dish/info')
 @checkArgs(['login', 'token', 'data'])
