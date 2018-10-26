@@ -572,7 +572,7 @@ def opr_maybeorder_list():
 def opr_maybeorder_approve():
     data = json.loads(request.args['data'])
 
-    maybeorder = db.Maybeorder.query().filter_by(id=data["id"]).first()
+    maybeorder = db.Maybeorder.query.filter_by(id=data["id"]).first()
     
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
