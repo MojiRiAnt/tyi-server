@@ -615,7 +615,7 @@ def opr_order_list():
                         "id"            : order.id,
                         "address"       : order.address,
                         "client_id"     : order.client_id,
-                        "client_phone"  : prder.client.phone,
+                        "client_phone"  : order.client.phone,
                         "dish_id"       : order.dish_id,
                         "dish_name"     : order.dish.name,
                         "employee_id"   : order.employee_id,
