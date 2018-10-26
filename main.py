@@ -607,7 +607,7 @@ def opr_maybeorder_decline():
 
 @app.route('/opr/order/list')
 @checkArgs(['login', 'token'])
-@checkClient()
+@checkEmployee(db.Role['Operator'])
 def opr_order_list():
     return dumpResponse(200, "OK", "Success!",
                 [
