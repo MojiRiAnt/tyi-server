@@ -143,6 +143,17 @@ def mng_shipper_add():
 @checkArgs(['login', 'token'])
 @checkEmployee(db.Role['Manager'])
 def mng_invoice_list():
+    invoices  = db.Invoice.query
+
+    if 'cafe_id' in request.args:
+        invoices = invoices.filter_by(cafe_id=request.args['cafe_id'])
+
+    if 'date_start' in request.args:
+        invoices = invoices.filter(db.Invoice.date >= request.args['date_start'])
+    
+    if 'date_finish' in request.args:
+        invoices = invoices.filter(db.Invoice.date <= request.args['date_finish'])
+
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -165,7 +176,7 @@ def mng_invoice_list():
                         for supply in invoice.supplies
                     ],
                 }
-                for invoice in db.Invoice.query.all()
+                for invoice in invoices
             ])
 
 @app.route('/mng/invoice/add')
