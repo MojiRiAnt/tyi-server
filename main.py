@@ -225,7 +225,7 @@ def mng_supply_list():
                 for supply in supplies.all()
             ])
 
-@app.route('/mng/supply/remove')
+@app.route('/mng/supply/setamount')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Manager'])
 def mng_supply_remove():
@@ -236,7 +236,7 @@ def mng_supply_remove():
     if supply is None:
         return dumpResponse(404, "NF", "Supply not found!")
 
-    db.db.session.delete(supply)
+    supply.amount = data['amount']
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
