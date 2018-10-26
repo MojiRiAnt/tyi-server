@@ -116,7 +116,6 @@ class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     code            = db.Column(db.String(_CODE_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
-    description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
     #supplies <- Supply
     #linkdishes <- Linkdishfoodstuff <- Dish
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")

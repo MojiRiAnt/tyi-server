@@ -250,7 +250,6 @@ def mng_foodstuff_list():
                     "id"                : foodstuff.id,
                     "code"              : foodstuff.code,
                     "name"              : foodstuff.name,
-                    "description"       : foodstuff.description,
                     "measurement_unit"  : foodstuff.measurement_unit,
                 }
                 for foodstuff in db.Foodstuff.query.all()
@@ -264,7 +263,6 @@ def mng_foodstuff_add():
 
     db.db.session.add(db.Foodstuff(code=data["code"],
                                     name=data["name"],
-                                    description=data["description"],
                                     measurement_unit=data["measurement_unit"]))
 
     db.db.session.commit()
@@ -284,7 +282,6 @@ def mng_foodstuff_edit():
 
     foodstuff.code=data["code"]
     foodstuff.name=data["name"]
-    foodstuff.description=data["description"]
     foodstuff.measurement_unit=data["measurement_unit"]
 
     db.db.session.commit()
@@ -398,6 +395,32 @@ def cli_dish_info():
                 ],
             })
 
+@app.route('/cli/maybeorder/list')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_maybeorder_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "address"   : maybeorder.address,
+                    "dishes"    : maybeorder.dishes,
+                }
+                for maybeorder in db.Maybeorder.query.filter_by(client.phone=request.args['phone']).all()
+            ])
+
+@app.route('/cli/order/list')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_order_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "address" : order.address,
+                    "dish_id" : order.dish_id,
+                }
+                for order in db.Order.query.filter_by(client.phone=request.args['phone']).all()
+            ])
+
 @app.route('/cli/auth/add')
 @checkArgs(['phone'])
 def cli_auth_try():
@@ -470,7 +493,7 @@ def cli_auth():
 @checkArgs(['phone', 'secret'])
 @checkClient()
 def cli_update():
-    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    .cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     updated = {'name':False, 'email':False}
     if 'name' in request.args and db.Client.isValidName(request.args['name']):
         cli.name = request.args['name']
@@ -595,7 +618,6 @@ if __name__ == '__main__':
             
             db.db.session.add(db.Foodstuff(code=foodstuff['code'],
                                             name=foodstuff['name'],
-                                            description=foodstuff['description'],
                                             measurement_unit=foodstuff['measurement']))
 
        #LOAD Dish, Dishcategory, Linkdishfoodstuff
