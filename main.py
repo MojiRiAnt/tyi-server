@@ -425,6 +425,7 @@ def cli_maybeorder_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
+                    "id"        : maybeorder.id,
                     "address"   : maybeorder.address,
                     "dishes"    : maybeorder.dishes,
                 }
@@ -438,8 +439,9 @@ def cli_order_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "address" : order.address,
-                    "dish_id" : order.dish_id,
+                    "id"        : order.id,
+                    "address"   : order.address,
+                    "dish_id"   : order.dish_id,
                 }
                 for order in db.Order.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
