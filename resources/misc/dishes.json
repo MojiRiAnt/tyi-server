@@ -9,7 +9,7 @@
                 "amount" : 120,
                 "measurement" : "g",
                 "cooking_time" : 10,
-                "description" : "Such an awesome Pizza! A Pizza for Master!",
+                "description" : "Чудейснейшая пицца! Её благословили еще во времена фараона, потому что наши повара хорошо её готовили.",
                 "ingredients" :
                 [
                     {
@@ -24,7 +24,7 @@
                 "amount" : 110,
                 "measurement" : "g",
                 "cooking_time" : 10,
-                "description" : "Настоящий classic, я бы даже сказал pleasantly!",
+                "description" : "Настоящий classic, я бы даже сказал pleasantly! Тем не менее, совсем не margarita!",
                 "ingredients" :
                 [
                     {
@@ -32,6 +32,33 @@
                         "amount" : 100
                     }
                 ]
+            },
+            {
+                "name" : "Пицца Морская",
+                "price" : 650,
+                "amount" : 110,
+                "measurement" : "g",
+                "cooking_time" : 20,
+                "description": "Одобрено Посейдоном, приготовлено с любовью. Прямиком из тихого океана.",
+                "ingredients" :
+                 [
+                     {
+                         "code" : "ASDF87812A",
+                         "amount" : 100
+                     },
+                     {
+                         "code" : "JOJIY2MVQJ",
+                         "amount" : 10
+                     },
+                     {
+                         "code" : "R29715AYHL",
+                         "amount" : "50"
+                     },
+                     {
+                         "code" : "7MGWP96KAB",
+                         "amount" : "50"
+                     }
+                 ]
             }
         ]
     },
@@ -40,8 +67,7 @@
         "dishes" :
         [
             {
-                "name" : "Salad Caesar",
-                "category" : "Salads",
+                "name" : "Салат Цезарь",
                 "price" : 45,
                 "amount" : 65,
                 "measurement" : "g",
@@ -52,6 +78,45 @@
                     {
                         "code" : "ASDF87812A",
                         "amount" : 100
+                    },
+                    {
+                        "code" : "R90J2Z99Q0",
+                        "amount" : 80
+                    },
+                    {
+                        "code" : "1RSR2AWZ8R",
+                        "amount" : 20
+                    },
+                    {
+                        "code" : "ES8879ZB5Z",
+                        "amount" : 20
+                    }
+                ]
+            },
+            {
+                "name" : "Салат Морской",
+                "price" : 100,
+                "amount" : 110,
+                "measurement" : "g",
+                "cooking_time" : 10,
+                "description" : "В сочетании с морской пиццей можно ",
+                "ingredients" :
+                [
+                    {
+                        "code" : "OQ937AD90S",
+                        "amount" : 100
+                    },
+                    {
+                        "code" : "6LCNI0WAYZ",
+                        "amount" : 80
+                    },
+                    {
+                        "code" : "7MGWP96KAB",
+                        "amount" : 20
+                    },
+                    {
+                        "code" : "UZLSWT7EBE",
+                        "amount" : 20
                     }
                 ]
             }
@@ -62,8 +127,7 @@
         "dishes" :
         [
             {
-                "name" : "Pepsi",
-                "category" : "Drinks",
+                "name" : "Пепас",
                 "price" : 11,
                 "amount" : 500,
                 "measurement" : "ml",
@@ -72,8 +136,67 @@
                 "ingredients" :
                 [
                     {
-                        "code" : "ASDF87812A",
+                        "code" : "HSZEWT9NE6",
                         "amount" : 100
+                    }
+                ]
+            },
+            {
+                "name" : "Кола",
+                "price" : 11,
+                "amount" : 500,
+                "measurement" : "ml",
+                "cooking_time" : 1,
+                "description" : "Смакуй з кока-кола.",
+                "ingredients" :
+                [
+                    {
+                        "code" : "XFTGVYLJO1",
+                        "amount" : 100
+                    }
+                ]
+            },
+            {
+                "name" : "Пепси-кола",
+                "price" : 11,
+                "amount" : 500,
+                "measurement" : "ml",
+                "cooking_time" : 1,
+                "description" : "Адская помесь.",
+                "ingredients" :
+                [
+                    {
+                        "code" : "XFTGVYLJO1",
+                        "amount" : 50
+                    },
+                    {
+                        "code" : "HSZEWT9NE6",
+                        "amount" : 50
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name":"",
+        "dishes" :
+        [
+            {
+                "name" : "Флинт с крабом",
+                "price" : 1,
+                "amount" : 500,
+                "measurement" : "г",
+                "cooking_time" : 0,
+                "description" : "Любимая закуска нашего первого клиента",
+                "ingredients" :
+                [
+                    {
+                        "code" : "OQ937AD90S",
+                        "amount" : 100
+                    },
+                    {
+                        "code" : "2H4RO7NIY8",
+                        "amount" : 50
                     }
                 ]
             }

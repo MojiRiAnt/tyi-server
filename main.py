@@ -622,6 +622,23 @@ def opr_order_list():
                     for order in db.Order.query.all()
                 ])
 
+@app.route('/opr/order/setcooked')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_order_setcooked():
+    data = json.loads(request.args['data'])
+
+    order = db.Order.query.filter_by(id=data["id"]).first()
+
+    if order is None:
+        return dumpResponse(404, "NF", "No order found!")
+
+    #Move order to delivery
+
+    db.db.session.delete(order)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
 @app.route('/opr/dish/info')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
