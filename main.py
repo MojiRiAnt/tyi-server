@@ -413,12 +413,12 @@ def cli_auth_try():
 
         return dumpResponse(200, "OK", "Success!",
                 {
-                    "found" : False, 
+                    "verified" : False, 
                 })
 
     return dumpResponse(200, "OK", "Success!",
                 {
-                    "found" : True,    
+                    "verified" : cli is None,
                 })
 
 @app.route('/cli/auth/new')
