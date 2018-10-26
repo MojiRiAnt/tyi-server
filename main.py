@@ -578,7 +578,7 @@ def opr_maybeorder_approve():
         return dumpResponse(404, "NF", "No maybeorder found!")
 
     for dish in maybeorder.dishes.split():
-        id, amount = dish.split(':')
+        id, amount = [int(z) for z in dish.split(':')]
         for i in range(amount):
             db.db.session.add(db.Order(address=maybeorder.address,
                                         client_id=maybeorder.client_id,
