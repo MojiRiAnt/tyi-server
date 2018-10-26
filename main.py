@@ -428,7 +428,7 @@ def cli_maybeorder_list():
                     "address"   : maybeorder.address,
                     "dishes"    : maybeorder.dishes,
                 }
-                for maybeorder in db.Maybeorder.query.filter(client.has(phone=request.args['phone'])).all()
+                for maybeorder in db.Maybeorder.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/order/list')
@@ -441,7 +441,7 @@ def cli_order_list():
                     "address" : order.address,
                     "dish_id" : order.dish_id,
                 }
-                for order in db.Order.query.filter(client.has(phone=request.args['phone'])).all()
+                for order in db.Order.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/auth/add')
