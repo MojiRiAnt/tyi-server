@@ -33,10 +33,14 @@ class Order(db.Model):
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
-    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
-    dish            = db.relationship('Dish', backref=db.backref('orders'), lazy=True)
-    employee_id     = db.Column(db.Integer, db.ForeignKey('employee.id'), default=-1)
-    employee        = db.relationship('Employee', backref=db.backref('orders'), lazy=True)
+    dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
+
+class Delivery(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
+    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
+    client          = db.relationship('Client', backref=db.backref('deliveries'), lazy=True)
+    dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
 
 #================[USERS MANAGEMENT]===============
 
@@ -55,6 +59,7 @@ class Client(db.Model):
     registered_date = db.Column(db.String(_DATE_SIZE))
     #maybeorders <- Maybeorder
     #orders <- Order
+    #deliveries <- Delivery
 
     @classmethod
     def isValidName(cls, name):

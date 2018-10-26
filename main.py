@@ -579,12 +579,9 @@ def opr_maybeorder_approve():
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
 
-    for dish in maybeorder.dishes.split():
-        id, amount = [int(z) for z in dish.split(':')]
-        for i in range(amount):
-            db.db.session.add(db.Order(address=maybeorder.address,
-                                        client_id=maybeorder.client_id,
-                                        dish_id=maybeorder.id))
+    db.db.session.add(db.Order(address = maybeorder.address,
+                                dishes = maybeorder.dishes,
+                                client_id = maybeorder.client_id))
 
     db.db.session.delete(maybeorder)
     db.db.session.commit()
@@ -616,9 +613,7 @@ def opr_order_list():
                         "address"       : order.address,
                         "client_id"     : order.client_id,
                         "client_phone"  : order.client.phone,
-                        "dish_id"       : order.dish_id,
-                        "dish_name"     : order.dish.name,
-                        "employee_id"   : order.employee_id,
+                        "dishes"        : order.dishes,
                     }
                     for order in db.Order.query.all()
                 ])
@@ -634,7 +629,9 @@ def opr_order_setcooked():
     if order is None:
         return dumpResponse(404, "NF", "No order found!")
 
-    #Move order to delivery
+    db.db.session.add(db.Delivery(address=order.address,
+                                    dishes=order.dishes,
+                                    client_id=order.client_id))
 
     db.db.session.delete(order)
     db.db.session.commit()
