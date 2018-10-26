@@ -405,7 +405,7 @@ def cli_maybeorder_list():
                     "address"   : maybeorder.address,
                     "dishes"    : maybeorder.dishes,
                 }
-                for maybeorder in db.Maybeorder.query.filter_by(client.phone=request.args['phone']).all()
+                for maybeorder in db.Maybeorder.query.filter_by(client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/order/list')
@@ -418,7 +418,7 @@ def cli_order_list():
                     "address" : order.address,
                     "dish_id" : order.dish_id,
                 }
-                for order in db.Order.query.filter_by(client.phone=request.args['phone']).all()
+                for order in db.Order.query.filter_by(client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/auth/add')
@@ -493,7 +493,7 @@ def cli_auth():
 @checkArgs(['phone', 'secret'])
 @checkClient()
 def cli_update():
-    .cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     updated = {'name':False, 'email':False}
     if 'name' in request.args and db.Client.isValidName(request.args['name']):
         cli.name = request.args['name']
