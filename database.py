@@ -51,7 +51,7 @@ class Client(db.Model):
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False, unique=True)
     secret          = db.Column(db.String(_SECRET_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
-    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False, unique=True, default="")
+    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False, default="")
     registered_date = db.Column(db.String(_DATE_SIZE))
     #maybeorders <- Maybeorder
     #orders <- Order
