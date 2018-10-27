@@ -28,6 +28,7 @@ class Maybeorder(db.Model):
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('maybeorders'), lazy=True)
     dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
+    #number          = db.Column(db.String(_))
 
 class Order(db.Model):
     id              = db.Column(db.Integer, primary_key=True)

@@ -662,7 +662,7 @@ def cli_delivery_list():
                     "address"   : delivery.address,
                     "dishes"    : delivery.dishes,
                 }
-                for delivery in db.Delivery.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
+                for delivery in db.Delivery.query.filter(db.Delivery.client.has(phone=request.args['phone'])).all()
             ])
 
 @app.route('/cli/auth/add')
@@ -995,6 +995,16 @@ if __name__ == '__main__':
                                                 email=emp["email"],
                                                 permission=sum(db.Role[x] for x in emp["permission"])))
             db.db.session.add(cafe)
+
+       #LOAD Driver
+        with open('resources/misc/drivers.json') as f:
+            drivers = json.load(f)
+
+        for driver in drivers:
+            db.db.session.add(db.Driver(login=driver["login"],
+                                        phone=driver["phone"],
+                                        email=driver["email"],
+                                        token="3")) # WARNING : generate new token here
 
         db.db.session.commit()
         
