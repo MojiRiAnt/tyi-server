@@ -774,7 +774,7 @@ def opr_maybeorder_list():
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
 def opr_maybeorder_approve():
-    operator = db.Operator.query.filter_by(login=request.args['login']).first()
+    operator = db.Employee.query.filter_by(login=request.args['login']).first()
     data = json.loads(request.args['data'])
     maybeorder = db.Maybeorder.query.filter_by(id=data["id"]).first()
     if maybeorder is None:
@@ -787,7 +787,7 @@ def opr_maybeorder_approve():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
-@app.route('/opr/maybeorder/decline')
+@app.route('/opr/maybeorder/delete')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
 def opr_maybeorder_decline():
