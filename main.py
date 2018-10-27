@@ -347,6 +347,7 @@ def mng_dish_list():
                             "foodstuff_code" : link.foodstuff_code,
                             "foodstuff_name" : link.foodstuff.name,
                             "foodstuff_photo": link.foodstuff.photo,
+                            "foodstuff_measurement_unit" : link.foodstuff.measurement_unit,
                         }
                         for link in dish.linkfoodstuffs
                     ]
