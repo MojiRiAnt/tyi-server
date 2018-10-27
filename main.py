@@ -57,7 +57,7 @@ def checkDriver():
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            drv = dv.Driver.query.filter_by(login=request.args['login']).first()
+            drv = db.Driver.query.filter_by(login=request.args['login']).first()
             if drv is None:
                 return dumpResponse(404, "NF", "No driver found!")
             if drv.token != request.args['token']:
