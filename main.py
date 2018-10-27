@@ -792,7 +792,7 @@ def opr_maybeorder_approve():
 @checkEmployee(db.Role['Operator'])
 def opr_maybeorder_decline():
     data = json.loads(request.args['data'])
-    maybeorder = db.Maybeorder.query().filter_by(id=data["id"]).first()
+    maybeorder = db.Maybeorder.query.filter_by(id=data["id"]).first()
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
     db.db.session.delete(maybeorder)
@@ -803,7 +803,7 @@ def opr_maybeorder_decline():
 @checkArgs(['login', 'token'])
 @checkEmployee(db.Role['Operator'])
 def opr_order_list():
-    operator = db.Operator.query.filter_by(login=request.args['login']).first()
+    operator = db.Employee.query.filter_by(login=request.args['login']).first()
     return dumpResponse(200, "OK", "Success!",
                 [
                     {
@@ -820,7 +820,7 @@ def opr_order_list():
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
 def opr_order_setcooked():
-    operator = db.Operator.query.filter_by(login=request.args['login']).first()
+    operator = db.Employee.query.filter_by(login=request.args['login']).first()
     data = json.loads(request.args['data'])
     order = db.Order.query.filter_by(id=data["id"], cafe_id=operator.cafe_id).first()
     if order is None:
