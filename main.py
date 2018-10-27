@@ -378,7 +378,7 @@ def mng_dish_edit():
     dish.cooking_time = data['cooking_time']
     dish.measurement_unit = data['measurement_unit']
     dish.category_name = data['category_name']
-    dish.linkdishfoodstuffs = [db.Linkdishfoodstuff(amount = ing['amount'],
+    dish.linkfoodstuffs = [db.Linkdishfoodstuff(amount = ing['amount'],
                                                     foodstuff_code = ing['foodstuff_code'])
                                 for ing in data['ingredients']]
     db.db.session.commit()
