@@ -341,7 +341,7 @@ def mng_dish_list():
                             "foodstuff_code" : link.foodstuff_code,
                             "foodstuff_name" : link.foodstuff.name,
                         }
-                        for link in dish.linkdishfoodstuffs
+                        for link in dish.linkfoodstuffs
                     ]
                 }
                 for dish in db.Dish.query.all()
@@ -489,7 +489,7 @@ def adm_client_add():
         return dumpResponse(403, "FB", "Invalid phone or name!")
 
     cli = db.Client(phone=data['phone'],
-                    secret=4, # WARNING : enerate new secret here
+                    secret=db.Client.randSecret(),
                     name=data['name'],
                     reqistered_date=data['registered_date'])
     if 'email' in data and db.Client.isValidEmail(data['email']):
@@ -672,7 +672,7 @@ def cli_auth_try():
     ecli = db.Emptyclient.query.filter_by(phone=request.args['phone']).first()
     if cli is None and ecli is None:
         db.db.session.add(db.Emptyclient(phone=request.args['phone'],
-                                    secret=4)) #WARNING : generate new secret here
+                                    secret=db.Client.randSecret()))
         db.db.session.commit()
         #WARNING : send SMS with secret here
         return dumpResponse(200, "OK", "Success!",
@@ -695,16 +695,16 @@ def cli_auth_new():
     if not db.Client.isValidName(request.args['name']):
         return dumpResponse(403, "NA", "Forbidden info!")
     cli = db.Client(phone = ecli.phone,
-                    secret = ecli.secret,
+                    secret = db.Client.randSecret(),
                     name = request.args['name'],
                     registered_date = ecli.registered_date)
     db.db.session.add(cli)
     db.db.session.delete(ecli)
     db.db.session.commit()
-    #WARNING : generate new secret here
     return dumpResponse(200, "OK", "Success!",
                 {
                     "phone" : cli.phone,
+                    "secret": cli.secret,
                     "name"  : cli.name,
                     "email" : cli.email,
                 })
@@ -898,6 +898,16 @@ def drv_claim_list():
                 for delivery in db.Delivery.query.filter_by(driver_id=driver.id).all()
             ])
 
+@app.route('/drv/claim/confirm')
+@checkArgs(['login', 'token', 'data'])
+@checkDriver()
+def drv_claim_confirm():
+    data = json.loads(request.args['data'])
+    delivery = db.Delivery.query.filter_by(id=data['id']).first()
+    db.db.session.delete(delivery)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success")
+
 @app.route('/drv/claim/decline')
 @checkArgs(['login', 'token', 'data'])
 @checkDriver()
@@ -989,11 +999,14 @@ if __name__ == '__main__':
             cafe = db.Cafe(name=data["name"],
                         address=data["address"])
             for emp in data["staff"]:
-                cafe.employees.append(db.Employee(login=emp["login"],
-                                                token=emp["token"],
-                                                phone=emp["phone"],
-                                                email=emp["email"],
-                                                permission=sum(db.Role[x] for x in emp["permission"])))
+                employee = db.Employee(login=emp["login"],
+                                token=db.Employee.randToken(),
+                                phone=emp["phone"],
+                                email=emp["email"],
+                                permission=sum(db.Role[x] for x in emp["permission"]))
+                if "token" in emp:
+                    employee.token = emp["token"]
+                cafe.employees.append(employee)
             db.db.session.add(cafe)
 
        #LOAD Driver
@@ -1001,10 +1014,13 @@ if __name__ == '__main__':
             drivers = json.load(f)
 
         for driver in drivers:
-            db.db.session.add(db.Driver(login=driver["login"],
-                                        phone=driver["phone"],
-                                        email=driver["email"],
-                                        token="3")) # WARNING : generate new token here
+            drv = db.Driver(login=driver["login"],
+                            phone=driver["phone"],
+                            email=driver["email"],
+                            token=db.Employee.randToken())
+            if "token" in driver:
+                drv.token = driver["token"]
+            db.db.session.add(drv)
 
         db.db.session.commit()
         

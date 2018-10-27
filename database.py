@@ -1,7 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from string import ascii_letters, digits
+import random
 
 db = SQLAlchemy()
+
+def randStr(length):
+    return ''.join(random.choice(ascii_letters + digits) for _ in range(length))
 
 _NAME_SIZE = 32
 _NUMBER_SIZE = 16
@@ -70,6 +75,10 @@ class Client(db.Model):
     #deliveries <- Delivery
 
     @classmethod
+    def randSecret(cls):
+        return randStr(_SECRET_SIZE)
+
+    @classmethod
     def isValidPhone(cls, phone):
         if phone == "":
             return False
@@ -102,6 +111,10 @@ class Employee(db.Model):
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
     cafe            = db.relationship('Cafe', backref=db.backref('employees'), lazy=True)
+
+    @classmethod
+    def randToken(cls):
+        return randStr(_TOKEN_SIZE)
 
 class Driver(db.Model):
     id              = db.Column(db.Integer, primary_key=True)

@@ -38,7 +38,6 @@
             {
                 "login" : "test_cook",
                 "name" : "Cook",
-                "token" : "3",
                 "phone" : "+380123456789",
                 "email" : "cook@test.mail",
                 "permission" : ["Cook"]
@@ -46,7 +45,6 @@
             {
                 "login" : "test_noone",
                 "name" : "Noone",
-                "token" : "3",
                 "phone" : "+380123456789",
                 "email" : "noone@test.mail",
                 "permission" : []

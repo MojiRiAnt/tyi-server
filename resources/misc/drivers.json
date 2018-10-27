@@ -1,6 +1,7 @@
 [
     {
         "login" : "test_driver",
+        "token" : "3",
         "phone" : "12345",
         "email" : "driver@test.mail"
     }
