@@ -127,6 +127,7 @@ def mng_shipper_list():
                     "contract_number"   : shipper.contract_number,
                     "contract_file"     : shipper.contract_file,
                     "phone"             : shipper.phone,
+                    "photo"             : shipper.photo,
                 }
                 for shipper in db.Shipper.query.all()
             ])
@@ -185,6 +186,7 @@ def mng_invoice_list():
                             "amount"            : supply.amount,
                             "measurement_unit"  : supply.foodstuff.measurement_unit,
                             "expiry"            : supply.expiry,
+                            "photo"             : supply.foodstuff.photo,
                         }
                         for supply in invoice.supplies
                     ],
@@ -236,6 +238,7 @@ def mng_supply_list():
                     "name"              : supply.foodstuff.name,
                     "measurement_unit"  : supply.foodstuff.measurement_unit,
                     "code"              : supply.foodstuff.code,
+                    "photo"             : supply.foodstuff.photo,
                 }
                 for supply in supplies.all()
             ])
@@ -261,6 +264,7 @@ def mng_foodstuff_list():
                     "code"              : foodstuff.code,
                     "name"              : foodstuff.name,
                     "measurement_unit"  : foodstuff.measurement_unit,
+                    "photo"             : foodstuff.photo,
                 }
                 for foodstuff in db.Foodstuff.query.all()
             ])
@@ -303,6 +307,7 @@ def mng_foodstuff_info():
                 {
                     "found"             : True,
                     "name"              : foodstuff.name,
+                    "photo"             : foodstuff.photo,
                     "measurement_unit"  : foodstuff.measurement_unit,
                 })
 
@@ -332,6 +337,7 @@ def mng_dish_list():
                     "price"             : dish.price,
                     "amount"            : dish.amount,
                     "cooking_time"      : dish.cooking_time,
+                    "photo"             : dish.photo,
                     "measurement_unit"  : dish.measurement_unit,
                     "category_name"     : dish.category_name,
                     "ingredients" :
@@ -340,6 +346,7 @@ def mng_dish_list():
                             "amount" : link.amount,
                             "foodstuff_code" : link.foodstuff_code,
                             "foodstuff_name" : link.foodstuff.name,
+                            "foodstuff_photo": link.foodstuff.photo,
                         }
                         for link in dish.linkfoodstuffs
                     ]
@@ -587,6 +594,7 @@ def cli_dish_list():
                     "name"              : dish.name,
                     "price"             : dish.price,
                     "amount"            : dish.amount,
+                    "photo"             : dish.photo,
                     "measurement_unit"  : dish.measurement_unit,
                     "category_name"     : dish.category_name,
                     "cooking_time"      : dish.cooking_time,
@@ -861,6 +869,7 @@ def opr_dish_list():
                     "price"             : dish.price,
                     "amount"            : dish.amount,
                     "cooking_time"      : dish.cooking_time,
+                    "photo"             : dish.photo,
                     "measurement_unit"  : dish.measurement_unit,
                     "category_name"     : dish.category_name,
                     "ingredients" :

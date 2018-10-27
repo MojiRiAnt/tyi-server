@@ -133,6 +133,7 @@ class Shipper(db.Model):
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
     contract_number = db.Column(db.String(_NUMBER_SIZE), nullable=False)
     contract_file   = db.Column(db.String(_FILEPATH_SIZE), nullable=False)
+    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://openclipart.org/image/800px/svg_to_png/197967/mono-metacontact-unknown.png')
     phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     #supplies <- Supply
@@ -162,6 +163,7 @@ class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     code            = db.Column(db.String(_CODE_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
+    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://openclipart.org/image/800px/svg_to_png/197967/mono-metacontact-unknown.png')
     #supplies <- Supply
     #linkdishes <- Linkdishfoodstuff <- Dish
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
@@ -181,7 +183,8 @@ class Dish(db.Model):
     description     = db.Column(db.String(_TEXT_SIZE), nullable=False)
     price           = db.Column(db.Integer, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
-    cooking_time    = db.Column(db.Integer, nullable=False) 
+    cooking_time    = db.Column(db.Integer, nullable=False)
+    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://openclipart.org/image/800px/svg_to_png/197967/mono-metacontact-unknown.png')
     #linkfoodstuffs <- Linkdishfoodstuff <- Foodstuff
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
     measurement     = db.relationship('Measurement', backref=db.backref('dishes'), lazy=True)
