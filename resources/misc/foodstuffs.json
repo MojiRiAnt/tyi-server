@@ -30,6 +30,16 @@
         "measurement": "г"
     },
     {
+        "code": "E81LTIYDFX",
+        "name": "Подсолнечное масло",
+        "measurement": "мл"
+    },
+    {
+        "code": "E81LTIYWFF",
+        "name": "Сливочное масло",
+        "measurement": "г"
+    },
+    {
         "code": "E81LTIYW2U",
         "name": "Гречка",
         "measurement": "г"
@@ -86,7 +96,7 @@
     },
     {
         "code": "491ISMXD9T",
-        "name": "Масло",
+        "name": "Масло «Эксклюзив»",
         "measurement": "г"
     },
     {
@@ -123,6 +133,11 @@
         "code": "MN48WFVUK5",
         "name": "Говядина",
         "measurement": "г"
+    },
+    {
+        "code": "WTR1337O",
+        "name" : "Питьевая вода",
+        "measurement": "мл"
     },
     {
         "code": "ES8879ZB5Z",

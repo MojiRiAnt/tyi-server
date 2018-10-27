@@ -1,6 +1,6 @@
 [
     {
-        "name" : "Nasha Ryaba",
+        "name" : "Наша Рябка",
         "contract_number" : "012323548",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
@@ -12,7 +12,7 @@
         "phone" : "+380123456789"
     },
     {
-        "name" : "Obolonska",
+        "name" : "Оболонская",
         "contract_number" : "348723412",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
@@ -24,13 +24,13 @@
         "phone" : "+380123456789"
     },
     {
-        "name" : "Kurgansky Myasokombinat",
+        "name" : "Курганский Мясокомбинат",
         "contract_number" : "238472342",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
     },
     {
-        "name" : "Chumak",
+        "name" : "Чумак",
         "contract_number" : "238942346",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
@@ -54,13 +54,13 @@
         "phone" : "+380123456789"
     },
     {
-        "name" : "Kharkivskiy Myasokombinat",
+        "name" : "Харьковский мясокомбинат",
         "contract_number" : "ASDFG12345",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
     },
     {
-        "name" : "OKZDH",
+        "name" : "ОКЗДХ",
         "contract_number" : "CNTRCT103",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
@@ -73,7 +73,7 @@
     },
     {
         "name" : "XLV.Zero",
-        "contract_number" : "ostashevloh",
+        "contract_number" : "ostashev337",
         "contract_file" : "http://www.africau.edu/images/default/sample.pdf",
         "phone" : "+380123456789"
     }

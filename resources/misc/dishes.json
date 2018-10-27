@@ -67,28 +67,51 @@
         "dishes" :
         [
             {
+                "name" : "Салат «Инь-Ян»",
+                "price" : 35,
+                "amount" : 220,
+                "measurement" : "g",
+                "cooking_time" : 10,
+                "description" : "Осторожно! Может загипнотизировать!",
+                "ingredients" :
+                [
+                    {
+                        "code" : "ES8879ZB5Z",
+                        "amount" : 100
+                    },
+                    {
+                        "code" : "1RSR2AWZ8R",
+                        "amount" : 100
+                    },
+                    {
+                        "code" : "E81LTIYDFX",
+                        "amount" : 20
+                    }
+                ]
+            },
+            {
                 "name" : "Салат Цезарь",
                 "price" : 45,
-                "amount" : 65,
+                "amount" : 220,
                 "measurement" : "g",
                 "cooking_time" : 5,
                 "description" : "Бенедикт Кукумбер одобряет!",
                 "ingredients" :
                 [
                     {
-                        "code" : "ASDF87812A",
+                        "code" : "JOJIY2MVQJ",
                         "amount" : 100
                     },
                     {
-                        "code" : "R90J2Z99Q0",
+                        "code" : "IRUSGMVO9Y",
                         "amount" : 80
                     },
                     {
-                        "code" : "1RSR2AWZ8R",
+                        "code" : "5BG3UTM6E4",
                         "amount" : 20
                     },
                     {
-                        "code" : "ES8879ZB5Z",
+                        "code" : "491ISMXD9T",
                         "amount" : 20
                     }
                 ]
@@ -96,30 +119,61 @@
             {
                 "name" : "Салат Морской",
                 "price" : 100,
-                "amount" : 110,
+                "amount" : 220,
                 "measurement" : "g",
                 "cooking_time" : 10,
-                "description" : "В сочетании с морской пиццей можно ",
+                "description" : "В сочетании с морской пиццей можно родиться заново!",
                 "ingredients" :
                 [
                     {
-                        "code" : "OQ937AD90S",
+                        "code" : "JOJIY2MVQJ",
                         "amount" : 100
                     },
                     {
-                        "code" : "6LCNI0WAYZ",
+                        "code" : "IRUSGMVO9Y",
                         "amount" : 80
                     },
                     {
-                        "code" : "7MGWP96KAB",
+                        "code" : "5BG3UTM6E4",
                         "amount" : 20
                     },
                     {
-                        "code" : "UZLSWT7EBE",
+                        "code" : "491ISMXD9T",
                         "amount" : 20
                     }
                 ]
-            }
+            },
+            {
+                "name" : "Салат «Райский остров»",
+                "price" : 40,
+                "amount" : 280,
+                "measurement" : "g",
+                "cooking_time" : 10,
+                "description" : "Почувствуйте настоящее фруктовое наслаждение. Этот салат способен отправить вас в назабываемое путешествие по тропическим пляжам.",
+                "ingredients" :
+                [
+                    {
+                        "code" : "YRBZDHEBMR",
+                        "amount" : 80
+                    },
+                    {
+                        "code" : "7QI0SIBPRU",
+                        "amount" : 80
+                    },
+                    {
+                        "code" : "PK4GWTOV48",
+                        "amount" : 80
+                    },
+                    {
+                        "code" : "S9OKME6A0B",
+                        "amount" : 40
+                    }
+                ]
+            },
+            {
+                "name" : "Салат Цезарь",
+                "price" : 45,
+                "amount" : 220,
         ]
     },
     {
@@ -127,32 +181,47 @@
         "dishes" :
         [
             {
-                "name" : "Пепас",
+                "name" : "Вода",
+                "price" : 8,
+                "amount" : 400,
+                "measurement" : "мл",
+                "description" : "Самая обыкновенная вода. Всегда освежает и приводит в чувства. Одним из главных достоинств является то, что её не обидно пролить на костюм.",
+                "cooking_time" : 1,
+                "ingredients" :
+                [
+                    {
+                        "code" : "",
+                        "amount" : 400
+                    }
+                ]
+            },
+            {
+                "name" : "Pepsi",
                 "price" : 11,
                 "amount" : 500,
-                "measurement" : "ml",
+                "measurement" : "мл",
                 "cooking_time" : 1,
                 "description" : "Не только еда, но и отличная мебель.",
                 "ingredients" :
                 [
                     {
                         "code" : "HSZEWT9NE6",
-                        "amount" : 100
+                        "amount" : 500
                     }
                 ]
             },
             {
-                "name" : "Кола",
+                "name" : "Coca-cola",
                 "price" : 11,
                 "amount" : 500,
-                "measurement" : "ml",
+                "measurement" : "мл",
                 "cooking_time" : 1,
                 "description" : "Смакуй з кока-кола.",
                 "ingredients" :
                 [
                     {
                         "code" : "XFTGVYLJO1",
-                        "amount" : 100
+                        "amount" : 500
                     }
                 ]
             },
@@ -160,18 +229,18 @@
                 "name" : "Пепси-кола",
                 "price" : 11,
                 "amount" : 500,
-                "measurement" : "ml",
+                "measurement" : "мл",
                 "cooking_time" : 1,
-                "description" : "Адская помесь.",
+                "description" : "Адская помесь!",
                 "ingredients" :
                 [
                     {
                         "code" : "XFTGVYLJO1",
-                        "amount" : 50
+                        "amount" : 200
                     },
                     {
                         "code" : "HSZEWT9NE6",
-                        "amount" : 50
+                        "amount" : 300
                     }
                 ]
             }
@@ -183,20 +252,35 @@
         [
             {
                 "name" : "Флинт с крабом",
-                "price" : 1,
+                "price" : 7,
                 "amount" : 500,
                 "measurement" : "г",
-                "cooking_time" : 0,
+                "cooking_time" : 1,
                 "description" : "Любимая закуска нашего первого клиента",
                 "ingredients" :
                 [
                     {
                         "code" : "OQ937AD90S",
-                        "amount" : 100
+                        "amount" : 250
                     },
                     {
                         "code" : "2H4RO7NIY8",
-                        "amount" : 50
+                        "amount" : 250
+                    }
+                ]
+            },
+            {
+                "name" : "Крекеры «Хруст»",
+                "price" : 11,
+                "amount" : 500,
+                "measurement" : "г",
+                "cooking_time" : 1,
+                "description" : "Слышишь хруст? А он есть…",
+                "ingredients" :
+                [
+                    {
+                        "code" : "IR5QT7Y6ZM",
+                        "amount" : 500
                     }
                 ]
             }
