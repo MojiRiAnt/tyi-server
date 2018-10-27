@@ -362,6 +362,7 @@ def mng_dish_add():
     for ing in data['ingredients']:
         dish.linkfoodstuffs.append(db.Linkdishfoodstuff(amount = ing['amount'],
                                         foodstuff_code = ing['foodstuff_code']))
+    db.db.session.add(dish)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
