@@ -53,6 +53,19 @@ def checkEmployee(permission):
         return wrapper
     return decorator
 
+def checkDriver():
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            drv = dv.Driver.query.filter_by(login=request.args['login']).first()
+            if drv is None:
+                return dumpResponse(404, "NF", "No driver found!")
+            if drv.token != request.args['token']:
+                return dumpResponse(401, "NA", "Incorrect token!")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
 def checkClient():
     def decorator(func):
         @wraps(func)
@@ -65,6 +78,7 @@ def checkClient():
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
 
 @app.route('/mng/cafe/list')
 @checkArgs(['login', 'token'])
@@ -85,12 +99,9 @@ def mng_cafe_list():
 @checkEmployee(db.Role['Manager'])
 def mng_cafe_add():
     data = json.loads(request.args['data'])
-
-    with app.app_context():
-        db.db.session.add(db.Cafe(name=data['name'],
-                                address=data['address']))
-        db.db.session.commit()
-
+    db.db.session.add(db.Cafe(name=data['name'],
+                            address=data['address']))
+    db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/cafe/edit')
@@ -98,14 +109,10 @@ def mng_cafe_add():
 @checkEmployee(db.Role['Manager'])
 def mng_cafe_edit():
     data = json.loads(request.args['data'])
-
-    with app.app_context():
-        cafe = db.Cafe.query.filter_by(id=data['id']).first()
-        cafe.name=data['name']
-        cafe.address=data['address']
-
-        db.db.session.commit()
-
+    cafe = db.Cafe.query.filter_by(id=data['id']).first()
+    cafe.name=data['name']
+    cafe.address=data['address']
+    db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/shipper/list')
@@ -129,14 +136,24 @@ def mng_shipper_list():
 @checkEmployee(db.Role['Manager'])
 def mng_shipper_add():
     data = json.loads(request.args['data'])
+    db.db.session.add(db.Shipper(name=data['name'],
+                                contract_number=data['contract_number'],
+                                contract_file=data['contract_file'],
+                                phone=data['phone']))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
 
-    with app.app_context():
-        db.db.session.add(db.Shipper(name=data['name'],
-                                    contract_number=data['contract_number'],
-                                    contract_file=data['contract_file'],
-                                    phone=data['phone']))
-        db.db.session.commit()
-
+@app.route('/mng/shipper/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_shipper_edit():
+    data = json.loads(request.args['data'])
+    shipper = db.Shipper.query.filter_by(id=data['id']).first()
+    shipper.name = data['name']
+    shipper.contract_number = data['contract_number']
+    shipper.contract_file = data['contract_file']
+    shipper.phone = data['phone']
+    db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/invoice/list')
@@ -144,16 +161,12 @@ def mng_shipper_add():
 @checkEmployee(db.Role['Manager'])
 def mng_invoice_list():
     invoices  = db.Invoice.query
-
     if 'cafe_id' in request.args:
         invoices = invoices.filter_by(cafe_id=request.args['cafe_id'])
-
     if 'date_start' in request.args:
         invoices = invoices.filter(db.Invoice.date >= request.args['date_start'])
-    
     if 'date_finish' in request.args:
         invoices = invoices.filter(db.Invoice.date <= request.args['date_finish'])
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -184,21 +197,16 @@ def mng_invoice_list():
 @checkEmployee(db.Role['Manager'])
 def mng_invoice_add():
     data = json.loads(request.args['data'])
-
-    with app.app_context():
-        invoice = db.Invoice(number=data['number'],
-                cafe_id=data['cafe_id'],
-                shipper_id=data['shipper_id'])
-
-        for supply in data['supplies']:
-            invoice.supplies.append(db.Supply(expiry=supply['expiry'],
-                                            amount=supply['amount'],
-                                            foodstuff_code=supply['code'],
-                                            cafe_id=data['cafe_id']
-                                            ))
-        db.db.session.add(invoice)
-        db.db.session.commit()
-
+    invoice = db.Invoice(number=data['number'],
+            cafe_id=data['cafe_id'],
+            shipper_id=data['shipper_id'])
+    for supply in data['supplies']:
+        invoice.supplies.append(db.Supply(expiry=supply['expiry'],
+                                        amount=supply['amount'],
+                                        foodstuff_code=supply['code'],
+                                        cafe_id=data['cafe_id']))
+    db.db.session.add(invoice)
+    db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/supply/list')
@@ -206,16 +214,12 @@ def mng_invoice_add():
 @checkEmployee(db.Role['Manager'])
 def mng_supply_list():
     supplies = db.Supply.query
-
     if 'cafe_id' in request.args:
         supplies = supplies.filter_by(cafe_id=request.args['cafe_id'])
-
     if 'date_start' in request.args:
         supplies = supplies.filter(db.Supply.invoice.has(db.Invoice.date >= request.args['date_start']))
-    
     if 'date_finish' in request.args:
         supplies = supplies.filter(db.Supply.invoice.has(db.Invoice.date <= request.args['date_finish']))
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -241,12 +245,7 @@ def mng_supply_list():
 @checkEmployee(db.Role['Manager'])
 def mng_supply_remove():
     data = json.loads(request.args['data'])
-    
     supply = db.Supply.query.filter_by(id=data['id']).first()
-
-    if supply is None:
-        return dumpResponse(404, "NF", "Supply not found!")
-
     supply.amount = data['amount']
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -271,13 +270,10 @@ def mng_foodstuff_list():
 @checkEmployee(db.Role['Manager'])
 def mng_foodstuff_add():
     data = json.loads(request.args['data'])
-
     db.db.session.add(db.Foodstuff(code=data["code"],
                                     name=data["name"],
                                     measurement_unit=data["measurement_unit"]))
-
     db.db.session.commit()
-
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/foodstuff/edit')
@@ -285,18 +281,11 @@ def mng_foodstuff_add():
 @checkEmployee(db.Role['Manager'])
 def mng_foodstuff_edit():
     data = json.loads(request.args['data'])
-
     foodstuff = db.Foodstuff.query.filter_by(id=data["id"]).first()
-
-    if foodstuff is None:
-        return dumpResponse(404, "NF", "No foodstuff found!")
-
     foodstuff.code=data["code"]
     foodstuff.name=data["name"]
     foodstuff.measurement_unit=data["measurement_unit"]
-
     db.db.session.commit()
-
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/mng/foodstuff/info')
@@ -304,15 +293,12 @@ def mng_foodstuff_edit():
 @checkEmployee(db.Role['Manager'])
 def mng_foodstuff_info():
     data = json.loads(request.args['data'])
-    
     foodstuff = db.Foodstuff.query.filter_by(code=data['code']).first()
-    
     if foodstuff is None:
         return dumpResponse(200, "OK", "Success!",
                 {
                     "found" : False,    
                 })
-    
     return dumpResponse(200, "OK", "Success!",
                 {
                     "found"             : True,
@@ -332,6 +318,133 @@ def mng_measurement_list():
                 }
                 for measurement in db.Measurement.query.all()
             ])
+
+@app.route('/mng/dish/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
+def mng_dish_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"                : dish.id,
+                    "name"              : dish.name,
+                    "description"       : dish.description,
+                    "price"             : dish.price,
+                    "amount"            : dish.amount,
+                    "cooking_time"      : dish.cooking_time,
+                    "measurement_unit"  : dish.measurement_unit,
+                    "category_name"     : dish.category_name,
+                    "ingredients" :
+                    [
+                        {
+                            "amount" : link.amount,
+                            "foodstuff_code" : link.foodstuff_code,
+                            "foodstuff_name" : link.foodstuff.name,
+                        }
+                        for link in dish.linkdishfoodstuffs
+                    ]
+                }
+                for dish in db.Dish.query.all()
+            ])
+
+@app.route('/mng/dish/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dish_add():
+    data = json.loads(request.args['data'])
+    dish = db.Dish(name=data['name'],
+                description=data['description'],
+                price=data['price'],
+                amount=data['amount'],
+                cooking_time=data['cooking_time'],
+                measurement_unit=data['measurement_unit'],
+                category_name=data['category_name'])
+    for ing in data['ingredients']:
+        dish.linkdishfoodstuffs.append(db.Linkdishfoodstuff(amount = ing['amount'],
+                                        foodstuff_code = ing['foodstuff_code']))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/dish/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dish_edit():
+    data = json.loads(request.args['data'])
+    dish = db.Dish.query.filter_by(id=data['id']).first()
+    dish.name = data['name']
+    dish.description = data['description']
+    dish.price = data['price']
+    dish.amount = data['amount']
+    dish.cooking_time = data['cooking_time']
+    dish.measurement_unit = data['measurement_unit']
+    dish.category_name = data['category_name']
+    dish.linkdishfoodstuffs = [db.Linkdishfoodstuff(amount = ing['amount'],
+                                                    foodstuff_code = ing['foodstuff_code'])
+                                for ing in data['ingredients']]
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+
+@app.route('/mng/dish/delete')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dish_delete():
+    data = json.loads(request.args['data'])
+    dish = db.Dish.query.filter_by(id=data['id']).first()
+    maybeorder = db.Maybeorder.query.filter((str(dish.id)+':') in db.Maybeorder.dishes).first()
+    order = db.Order.query.filter((str(dish.id)+':') in db.Order.dishes).first()
+    if maybeorder is not None or order is not None:
+        return dumpResponse(403, "FB", "There are orders w/ this dish!")
+    for link in dish.linkdishfoodstuffs:
+        db.db.session.delete(link)
+    db.db.session.delete(dish)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/dishcategory/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
+def mng_dishcategory_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id" : cat.id,
+                    "name" : cat.name,
+                }
+                for cat in db.Dishcategory.query.all()
+            ])
+
+@app.route('/mng/dishcategory/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dishcategory_add():
+    data = json.loads(request.args['data'])
+    db.db.session.add(db.Dishcategory(name=data['name']))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success")
+
+@app.route('/mng/dishcategory/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dishcategory_edit():
+    data = json.loads(request.args['data'])
+    cat = db.Dishcategory.query.filter_by(id=data['id']).first()
+    cat.name = data['name']
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/dishcategory/delete')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_dishcategory_delete():
+    data = json.loads(request.args['data'])
+    cat = db.Dishcategory.query.filter_by(id=data['id']).first()
+    if cat.dishes != []:
+        return dumpResponse(403, "FB", "There're dishes in this category!")
+    db.db.session.delete(cat)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
 
 @app.route('/adm/emptyclient/list')
 @checkArgs(['login', 'token'])
@@ -363,15 +476,109 @@ def adm_client_list():
                     for cli in db.Client.query.all()
                 ])
 
+@app.route('/adm/client/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_client_add():
+    data = json.loads(request.args['data'])
+    cli = db.Client.query.filter_by(phone=data['phone']).first()
+    if cli is not None:
+        return dumpResponse(403, "AE", "Client already exists!")
+
+    if not db.Client.isValidPhone(data['phone']) or not db.Client.isValidName(data['name']):
+        return dumpResponse(403, "FB", "Invalid phone or name!")
+
+    cli = db.Client(phone=data['phone'],
+                    secret=4, # WARNING : enerate new secret here
+                    name=data['name'],
+                    reqistered_date=data['registered_date'])
+    if 'email' in data and db.Client.isValidEmail(data['email']):
+        cli.email = data['email']
+    db.db.session.add(cli)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/adm/client/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_client_edit():
+    data = json.loads(request.args['data'])
+    cli = db.Client.query.filter_by(phone=data['phone']).first()
+    if 'name' in data and db.Client.isValidName(data['name']):
+        cli.name = data['name']
+    if 'email' in data and db.Client.isValidEmail(data['email']):
+        cli.email = data['email']
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/adm/client/delete')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_client_delete():
+    data = json.loads(request.args['data'])
+    cli = db.Client.query.filter_by(phone=data['phone']).first()
+    if cli.orders != [] or cli.maybeorders != [] or cli.deliveries != []:
+        return dumpResponse(403, "FB", "Client has orders/deliveries!")
+    db.db.session.delete(cli)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/adm/employee/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Admin'])
+def adm_employee_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id" : emp.id,
+                    "name" : emp.name,
+                    "login" : emp.login,
+                    "phone" : emp.phone,
+                    "email" : emp.email,
+                    "permission" : emp.permission,
+                    "registered_date" : emp.registered_date,
+                    "cafe_id" : emp.cafe_id,
+                    "cafe_name" : emp.cafe.name,
+                }
+                for emp in db.Employee.query.all()
+            ])
+
+@app.route('/adm/employee/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_employee_add():
+    data = json.loads(request.args['data']) # WARNING : no validity checkers
+    db.db.session.add(db.Employee(login=data['login'],
+                                    phone=data['phone'],
+                                    email=data['email'],
+                                    permission=data['permission'],
+                                    cafe_id=data['cafe_id']))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/adm/employee/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_employee_edit():
+    data = json.loads(request.args['data']) # WARNING : no validity checkers
+    emp = db.Employee.query.filter_by(id=data['id']).first()
+    emp.login = data['login']
+    emp.name = data['name']
+    emp.phone = data['phone']
+    emp.email = data['email']
+    emp.permission = data['permission']
+    emp.cafe_id = data['cafe_id']
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+
 @app.route('/cli/dish/list')
 @checkArgs(['phone', 'secret'])
 @checkClient()
 def cli_dish_list():
     dishes = db.Dish.query
-
     if 'category' in request.args:
         dishes = dishes.filter_by(category_name=request.args['category'])
-
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -391,11 +598,9 @@ def cli_dish_list():
 @checkClient()
 def cli_dish_info():
     data = json.loads(request.args['data'])
-
     dish = db.Dish.query.filter_by(id=data['id']).first()
     if dish is None:
         return dumpResponse(404, "NF", "No dish found!")
-
     return dumpResponse(200, "OK", "Success!",
             {
                 "description" : dish.description,
@@ -446,24 +651,34 @@ def cli_order_list():
                 for order in db.Order.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
 
+@app.route('/cli/delivery/list')
+@checkArgs(['phone', 'secret'])
+@checkClient()
+def cli_delivery_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"        : delivery.id,
+                    "address"   : delivery.address,
+                    "dishes"    : delivery.dishes,
+                }
+                for delivery in db.Delivery.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
+            ])
+
 @app.route('/cli/auth/add')
 @checkArgs(['phone'])
 def cli_auth_try():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
     ecli = db.Emptyclient.query.filter_by(phone=request.args['phone']).first()
-
     if cli is None and ecli is None:
         db.db.session.add(db.Emptyclient(phone=request.args['phone'],
                                     secret=4)) #WARNING : generate new secret here
         db.db.session.commit()
-
         #WARNING : send SMS with secret here
-
         return dumpResponse(200, "OK", "Success!",
                 {
                     "verified" : False, 
                 })
-
     return dumpResponse(200, "OK", "Success!",
                 {
                     "verified" : cli is not None,
@@ -473,27 +688,20 @@ def cli_auth_try():
 @checkArgs(['phone', 'secret', 'name'])
 def cli_auth_new():
     ecli = db.Emptyclient.query.filter_by(phone=request.args['phone']).first()
-
     if ecli is None:
         return dumpResponse(404, "NF", "Emptyclient not found!")
-
     if request.args['secret'] != ecli.secret:
         return dumpResponse(401, "NA", "Incorrect secret!")
-
     if not db.Client.isValidName(request.args['name']):
         return dumpResponse(403, "NA", "Forbidden info!")
-
     cli = db.Client(phone = ecli.phone,
                     secret = ecli.secret,
                     name = request.args['name'],
                     registered_date = ecli.registered_date)
     db.db.session.add(cli)
     db.db.session.delete(ecli)
-    
     db.db.session.commit()
-
     #WARNING : generate new secret here
-
     return dumpResponse(200, "OK", "Success!",
                 {
                     "phone" : cli.phone,
@@ -506,7 +714,6 @@ def cli_auth_new():
 @checkClient()
 def cli_auth():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
-    
     return dumpResponse(200, "OK", "Success!",
                 {
                     "phone" : cli.phone,
@@ -526,9 +733,7 @@ def cli_update():
     if 'email' in request.args and db.Client.isValidEmail(request.args['email']):
         cli.email = request.args['email']
         updated['email'] = True
-
     db.db.session.commit()
-
     return dumpResponse(200, "OK", "Success!", updated)
 
 @app.route('/cli/order')
@@ -540,17 +745,14 @@ def cli_order():
         data = json.loads(request.args['data'])
     except Exception as e:
         return dumpResponse(400, "ER", "Invalid JSON!")
-
     dishes = ' '.join(str(dish["id"])+':'+str(dish["amount"]) for dish in data) # WARNING : No json validity checker
-
     cli = db.Client.query.filter_by(phone=request.args["phone"]).first()
-
     db.db.session.add(db.Maybeorder(address=request.args["address"],
                                     client_id=cli.id,
                                     dishes=dishes))
     db.db.session.commit()
-
     return dumpResponse(200, "OK", "Success!")
+
 
 @app.route('/opr/maybeorder/list')
 @checkArgs(['login', 'token'])
@@ -568,21 +770,19 @@ def opr_maybeorder_list():
                 for maybeorder in db.Maybeorder.query.all()
             ])
 
-@app.route('/opr/maybeorder/approve')
+@app.route('/opr/maybeorder/claim')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
 def opr_maybeorder_approve():
+    operator = db.Operator.query.filter_by(login=request.args['login']).first()
     data = json.loads(request.args['data'])
-
     maybeorder = db.Maybeorder.query.filter_by(id=data["id"]).first()
-    
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
-
     db.db.session.add(db.Order(address = maybeorder.address,
                                 dishes = maybeorder.dishes,
-                                client_id = maybeorder.client_id))
-
+                                client_id = maybeorder.client_id,
+                                cafe_id = operator.cafe_id))
     db.db.session.delete(maybeorder)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -592,12 +792,9 @@ def opr_maybeorder_approve():
 @checkEmployee(db.Role['Operator'])
 def opr_maybeorder_decline():
     data = json.loads(request.args['data'])
-
     maybeorder = db.Maybeorder.query().filter_by(id=data["id"]).first()
-    
     if maybeorder is None:
         return dumpResponse(404, "NF", "No maybeorder found!")
-
     db.db.session.delete(maybeorder)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -606,6 +803,7 @@ def opr_maybeorder_decline():
 @checkArgs(['login', 'token'])
 @checkEmployee(db.Role['Operator'])
 def opr_order_list():
+    operator = db.Operator.query.filter_by(login=request.args['login']).first()
     return dumpResponse(200, "OK", "Success!",
                 [
                     {
@@ -615,24 +813,22 @@ def opr_order_list():
                         "client_phone"  : order.client.phone,
                         "dishes"        : order.dishes,
                     }
-                    for order in db.Order.query.all()
+                    for order in db.Order.query.filter_by(cafe_id=operator.cafe_id).all()
                 ])
 
-@app.route('/opr/order/setcooked')
+@app.route('/opr/order/ready')
 @checkArgs(['login', 'token', 'data'])
 @checkEmployee(db.Role['Operator'])
 def opr_order_setcooked():
+    operator = db.Operator.query.filter_by(login=request.args['login']).first()
     data = json.loads(request.args['data'])
-
-    order = db.Order.query.filter_by(id=data["id"]).first()
-
+    order = db.Order.query.filter_by(id=data["id"], cafe_id=operator.cafe_id).first()
     if order is None:
         return dumpResponse(404, "NF", "No order found!")
-
     db.db.session.add(db.Delivery(address=order.address,
                                     dishes=order.dishes,
-                                    client_id=order.client_id))
-
+                                    client_id=order.client_id,
+                                    cafe_id=order.cafe_id))
     db.db.session.delete(order)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -642,16 +838,76 @@ def opr_order_setcooked():
 @checkEmployee(db.Role['Operator'])
 def opr_dish_info():
     data = json.loads(request.args['data'])
-
     dish = db.Dish.query.filter_by(id=data['id']).first()
     if dish is None:
         return dumpResponse(404, "NF", "No dish found!")
-
     return dumpResponse(200, "OK", "Success!",
             {
                 "name" : dish.name,
                 "cooking_time" : dish.cooking_time,
             })
+
+
+@app.route('/drv/delivery/list')
+@checkArgs(['login', 'token'])
+@checkDriver()
+def drv_delivery_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"            : delivery.id,
+                    "address"       : delivery.address,
+                    "client_id"     : delivery.client_id,
+                    "client_name"   : delivery.client.name,
+                    "dishes"        : delivery.dishes,
+                    "cafe_id"       : delivery.cafe_id,
+                    "cafe_name"     : delivery.cafe.name,
+                }
+                for delivery in db.Delivery.query.filter_by(driver_id=-1).all()
+            ])
+
+@app.route('/drv/delivery/claim')
+@checkArgs(['login', 'token', 'data'])
+@checkDriver()
+def drv_delivery_claim():
+    data = json.loads(request.args['data'])
+    driver = db.Driver.query.filter_by(login=request.args['login']).first()
+    delivery = db.Delivery.query.filter_by(id=data['id']).first()
+    if delivery.driver_id != -1:
+        return dumpResponse(403, "AT", "Delivery already taken!")
+    delivery.driver_id = driver.id
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/drv/claim/list')
+@checkArgs(['login', 'token'])
+@checkDriver()
+def drv_claim_list():
+    driver = db.Driver.query.filter_by(login=request.args['login']).first()
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"            : delivery.id,
+                    "address"       : delivery.address,
+                    "client_id"     : delivery.client_id,
+                    "client_name"   : delivery.client.name,
+                    "dishes"        : delivery.dishes,
+                    "cafe_id"       : delivery.cafe_id,
+                    "cafe_name"     : delivery.cafe.name,
+                }
+                for delivery in db.Delivery.query.filter_by(driver_id=driver.id).all()
+            ])
+
+@app.route('/drv/claim/decline')
+@checkArgs(['login', 'token', 'data'])
+@checkDriver()
+def drv_claim_decline():
+    data = json.loads(request.args['data'])
+    delivery = db.Delivery.query.filter_by(id=data['id']).first()
+    db.db.session.delete(delivery)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
 
 if __name__ == '__main__':
 

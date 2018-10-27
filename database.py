@@ -16,6 +16,7 @@ _TOKEN_SIZE = 16
 _DATE_SIZE = 16
 _SECRET_SIZE = 16
 _DISHESLIST_SIZE = 256
+#_PASSWORD_SIZE = 32
 
 Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<3)}
 
@@ -34,6 +35,8 @@ class Order(db.Model):
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
     dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
+    cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
+    cafe            = db.relationship('Cafe', backref=db.backref('orders'), lazy=True)
 
 class Delivery(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -41,6 +44,10 @@ class Delivery(db.Model):
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('deliveries'), lazy=True)
     dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
+    cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
+    cafe            = db.relationship('Cafe', backref=db.backref('deliveries'), lazy=True)
+    driver_id       = db.Column(db.Integer, db.ForeignKey('driver.id'), default=-1)
+    driver          = db.relationship('Driver', backref=db.backref('deliveries'), lazy=True)
 
 #================[USERS MANAGEMENT]===============
 
@@ -60,6 +67,14 @@ class Client(db.Model):
     #maybeorders <- Maybeorder
     #orders <- Order
     #deliveries <- Delivery
+
+    @classmethod
+    def isValidPhone(cls, phone):
+        if phone == "":
+            return False
+        if phone[0] != ' ':
+            return False
+        return True
 
     @classmethod
     def isValidName(cls, name):
@@ -86,6 +101,16 @@ class Employee(db.Model):
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
     cafe            = db.relationship('Cafe', backref=db.backref('employees'), lazy=True)
+
+class Driver(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    login           = db.Column(db.String(_NAME_SIZE), nullable=False)
+    #password        = db.Column(db.String(_PASSWORD_SIZE), nullable=False)
+    token           = db.Column(db.String(_TOKEN_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    #deliveries <- Delivery
 
 #================[FOOD MANAGEMENT]===============
 
@@ -143,8 +168,7 @@ class Dish(db.Model):
     price           = db.Column(db.Integer, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
     cooking_time    = db.Column(db.Integer, nullable=False) 
-    #linkfoodstuff <- Linkdishfoodstuff <- Foodstuff
-    #orders <- Order
+    #linkfoodstuffs <- Linkdishfoodstuff <- Foodstuff
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
     measurement     = db.relationship('Measurement', backref=db.backref('dishes'), lazy=True)
     category_name   = db.Column(db.String(_NAME_SIZE), db.ForeignKey('dishcategory.name'), default="")
