@@ -360,7 +360,7 @@ def mng_dish_add():
                 measurement_unit=data['measurement_unit'],
                 category_name=data['category_name'])
     for ing in data['ingredients']:
-        dish.linkdishfoodstuffs.append(db.Linkdishfoodstuff(amount = ing['amount'],
+        dish.linkfoodstuffs.append(db.Linkdishfoodstuff(amount = ing['amount'],
                                         foodstuff_code = ing['foodstuff_code']))
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -846,6 +846,34 @@ def opr_dish_info():
                 "name" : dish.name,
                 "cooking_time" : dish.cooking_time,
             })
+
+@app.route('/opr/dish/list')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_dish_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"                : dish.id,
+                    "name"              : dish.name,
+                    "description"       : dish.description,
+                    "price"             : dish.price,
+                    "amount"            : dish.amount,
+                    "cooking_time"      : dish.cooking_time,
+                    "measurement_unit"  : dish.measurement_unit,
+                    "category_name"     : dish.category_name,
+                    "ingredients" :
+                    [
+                        {
+                            "amount" : link.amount,
+                            "foodstuff_code" : link.foodstuff_code,
+                            "foodstuff_name" : link.foodstuff.name,
+                        }
+                        for link in dish.linkfoodstuffs
+                    ]
+                }
+                for dish in db.Dish.query.all()
+            ])
 
 
 @app.route('/drv/delivery/list')
