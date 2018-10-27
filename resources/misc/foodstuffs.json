@@ -16,12 +16,12 @@
     },
     {
         "code": "JOJIY2MVQJ",
-        "name": "Спирулина",
+        "name": "Помидор",
         "measurement": "г"
     },
     {
         "code": "0TC3PL9HIO",
-        "name": "Другие продукты какао",
+        "name": "Шоколад",
         "measurement": "г"
     },
     {
@@ -31,47 +31,47 @@
     },
     {
         "code": "E81LTIYW2U",
-        "name": "Татаринская гречка",
+        "name": "Гречка",
         "measurement": "г"
     },
     {
         "code": "PM671LYW4T",
-        "name": "Squashberry",
+        "name": "Куриное мясо",
         "measurement": "г"
     },
     {
         "code": "PK4GWTOV48",
-        "name": "Другие фрукты",
+        "name": "Персик",
         "measurement": "г"
     },
     {
         "code": "R29715AYHL",
-        "name": "Морской черт",
+        "name": "Яблоко",
         "measurement": "г"
     },
     {
         "code": "QOE8SXPPH0",
-        "name": "Flammulina",
+        "name": "Ананас",
         "measurement": "г"
     },
     {
         "code": "UZLSWT7EBE",
-        "name": "Гигантская бабочка",
+        "name": "Грибы",
         "measurement": "г"
     },
     {
         "code": "IRUSGMVO9Y",
-        "name": "Помесь",
+        "name": "Огурец",
         "measurement": "г"
     },
     {
         "code": "7MGWP96KAB",
-        "name": "Тихоокеанский лосось",
+        "name": "Креветки",
         "measurement": "г"
     },
     {
         "code": "5BG3UTM6E4",
-        "name": "Sheepshead",
+        "name": "Зелень",
         "measurement": "г"
     },
     {
@@ -81,22 +81,22 @@
     },
     {
         "code": "20D3JLXK1K",
-        "name": "Каскадный хвостик",
+        "name": "Плавленый сыр",
         "measurement": "г"
     },
     {
         "code": "491ISMXD9T",
-        "name": "Неспециалист",
+        "name": "Масло",
         "measurement": "г"
     },
     {
         "code": "7QI0SIBPRU",
-        "name": "Меренга",
+        "name": "Киви",
         "measurement": "г"
     },
     {
         "code": "S9OKME6A0B",
-        "name": "Гайка",
+        "name": "Лимон",
         "measurement": "г"
     },
     {
@@ -106,22 +106,22 @@
     },
     {
         "code": "6B1YGAJWBA",
-        "name": "Другие замороженные десерты",
+        "name": "Пломбир",
         "measurement": "г"
     },
     {
         "code": "WD9NNVZCKD",
-        "name": "Дикий рис",
+        "name": "Рис",
         "measurement": "г"
     },
     {
         "code": "GRHUGTPBYJ",
-        "name": "Антилопа",
+        "name": "Свинина",
         "measurement": "г"
     },
     {
         "code": "MN48WFVUK5",
-        "name": "Гуайява",
+        "name": "Говядина",
         "measurement": "г"
     },
     {
@@ -131,7 +131,7 @@
     },
     {
         "code": "SGMJH1LP2E",
-        "name": "Окрашенные",
+        "name": "Лук",
         "measurement": "г"
     },
     {
@@ -156,12 +156,12 @@
     },
     {
         "code": "HSZEWT9NE6",
-        "name": "Пепси",
+        "name": "Pepsi",
         "measurement": "мл"
     },
     {
         "code": "XFTGVYLJO1",
-        "name": "Кола",
+        "name": "Coca-Cola",
         "measurement": "мл"
     }
 ]
