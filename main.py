@@ -726,11 +726,14 @@ def cli_auth_new():
 @checkClient()
 def cli_auth():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
+    cli.secret = db.Client.randSecret()
+    db.db.session.commit()
     return dumpResponse(200, "OK", "Success!",
                 {
                     "phone" : cli.phone,
                     "name"  : cli.name,
                     "email" : cli.email,
+                    "secret": cli.secret,
                 })
 
 @app.route('/cli/update')
