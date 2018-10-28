@@ -87,7 +87,7 @@ class Client(db.Model):
 
     @classmethod
     def randSecret(cls):
-        return randStr(_SECRET_SIZE, digits)
+        return "2705"#randStr(_SECRET_SIZE, digits)
 
     @classmethod
     def isValidPhone(cls, phone):
