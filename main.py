@@ -643,6 +643,7 @@ def cli_maybeorder_list():
                     "id"        : maybeorder.id,
                     "address"   : maybeorder.address,
                     "dishes"    : maybeorder.dishes,
+                    "number"    : maybeorder.number,
                 }
                 for maybeorder in db.Maybeorder.query.filter(db.Maybeorder.client.has(phone=request.args['phone'])).all()
             ])
@@ -657,6 +658,7 @@ def cli_order_list():
                     "id"        : order.id,
                     "address"   : order.address,
                     "dishes"    : order.dishes,
+                    "number"    : order.number,
                 }
                 for order in db.Order.query.filter(db.Order.client.has(phone=request.args['phone'])).all()
             ])
@@ -759,7 +761,8 @@ def cli_order():
     cli = db.Client.query.filter_by(phone=request.args["phone"]).first()
     db.db.session.add(db.Maybeorder(address=request.args["address"],
                                     client_id=cli.id,
-                                    dishes=dishes))
+                                    dishes=dishes,
+                                    number=db.Order.newNumber()))
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
@@ -776,6 +779,7 @@ def opr_maybeorder_list():
                     "client_id"     : maybeorder.client_id,
                     "client_phone"  : maybeorder.client.phone,
                     "dishes"        : maybeorder.dishes,
+                    "number"        : maybeorder.number,
                 }
                 for maybeorder in db.Maybeorder.query.all()
             ])
@@ -792,7 +796,8 @@ def opr_maybeorder_approve():
     db.db.session.add(db.Order(address = maybeorder.address,
                                 dishes = maybeorder.dishes,
                                 client_id = maybeorder.client_id,
-                                cafe_id = operator.cafe_id))
+                                cafe_id = operator.cafe_id,
+                                number = maybeorder.number))
     db.db.session.delete(maybeorder)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -822,6 +827,7 @@ def opr_order_list():
                         "client_id"     : order.client_id,
                         "client_phone"  : order.client.phone,
                         "dishes"        : order.dishes,
+                        "number"        : order.number,
                     }
                     for order in db.Order.query.filter_by(cafe_id=operator.cafe_id).all()
                 ])
@@ -838,7 +844,8 @@ def opr_order_setcooked():
     db.db.session.add(db.Delivery(address=order.address,
                                     dishes=order.dishes,
                                     client_id=order.client_id,
-                                    cafe_id=order.cafe_id))
+                                    cafe_id=order.cafe_id,
+                                    number=order.number))
     db.db.session.delete(order)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")

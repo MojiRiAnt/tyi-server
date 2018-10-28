@@ -10,6 +10,7 @@ def randStr(length, charset):
 
 _NAME_SIZE = 32
 _NUMBER_SIZE = 16
+_ORDERNUMBER_SIZE = 8
 _CODE_SIZE = 16
 _TEXT_SIZE = 128
 _ADDRESS_SIZE = 32
@@ -29,6 +30,7 @@ Role = {'Cook' : (1<<0), 'Operator' : (1<<1), 'Manager' : (1<<2), 'Admin' : (1<<
 
 class Maybeorder(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
+    number          = db.Column(db.String(_ORDERNUMBER_SIZE), nullable=False)
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('maybeorders'), lazy=True)
@@ -37,6 +39,7 @@ class Maybeorder(db.Model):
 
 class Order(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
+    number          = db.Column(db.String(_ORDERNUMBER_SIZE), nullable=False)
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('orders'), lazy=True)
@@ -44,8 +47,16 @@ class Order(db.Model):
     cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
     cafe            = db.relationship('Cafe', backref=db.backref('orders'), lazy=True)
 
+    @classmethod
+    def newNumber(cls):
+        res = randStr(_NUMBER_SIZE, digits)
+        while db.Maybeorder.query.filter_by(number=res).first() is not None and db.Order.query.filter_by(number=res).first() is not None and db.Delivery.query.filter_by(number=res).first() is not None:
+            res = randStr(_NUMBER_SIZE, digits)
+        return res
+
 class Delivery(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
+    number          = db.Column(db.String(_ORDERNUMBER_SIZE), nullable=False)
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('deliveries'), lazy=True)
