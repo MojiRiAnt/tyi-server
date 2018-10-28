@@ -174,7 +174,7 @@ class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     code            = db.Column(db.String(_CODE_SIZE), nullable=False)
     name            = db.Column(db.String(_NAME_SIZE), nullable=False)
-    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://openclipart.org/image/800px/svg_to_png/197967/mono-metacontact-unknown.png')
+    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://s8.hostingkartinok.com/uploads/images/2018/10/fa1c62a1b83af9429b6f567ac818496c.png')
     #supplies <- Supply
     #linkdishes <- Linkdishfoodstuff <- Dish
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
