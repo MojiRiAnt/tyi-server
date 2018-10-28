@@ -349,7 +349,7 @@ def mng_dish_list():
                             "foodstuff_photo": link.foodstuff.photo,
                             "foodstuff_measurement_unit" : link.foodstuff.measurement_unit,
                         }
-                        for link in dish.linkfoodstuffs
+                        for link in db.Linkdishfoodstuff.query.filter_by(dish_id=dish.id)
                     ]
                 }
                 for dish in db.Dish.query.all()
