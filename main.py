@@ -992,7 +992,7 @@ def drv_claim_confirm():
     data = json.loads(request.args['data'])
     delivery = db.Delivery.query.filter_by(id=data['id']).first()
     for struct in delivery.dishes.split():
-        id, amount = struct.split(':')
+        id, amount = [int(x) for x in struct.split(':')]
         for _ in range(amount):
             db.db.session.add(db.Archivedorder(address = delivery.address,
                                             client_id = delivery.client_id,
