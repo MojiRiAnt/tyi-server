@@ -195,7 +195,7 @@ class Dish(db.Model):
     price           = db.Column(db.Integer, nullable=False)
     amount          = db.Column(db.Integer, nullable=False)
     cooking_time    = db.Column(db.Integer, nullable=False)
-    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://openclipart.org/image/800px/svg_to_png/197967/mono-metacontact-unknown.png')
+    photo           = db.Column(db.String(_FILEPATH_SIZE), nullable=False, default='https://s8.hostingkartinok.com/uploads/images/2018/10/fa1c62a1b83af9429b6f567ac818496c.png')
     #linkfoodstuffs <- Linkdishfoodstuff <- Foodstuff
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
     measurement     = db.relationship('Measurement', backref=db.backref('dishes'), lazy=True)
