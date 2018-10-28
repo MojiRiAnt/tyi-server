@@ -886,6 +886,44 @@ def opr_dish_list():
                 for dish in db.Dish.query.all()
             ])
 
+@app.route('/opr/client/register')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_client_register():
+    data = json.loads(request.args['data'])
+    cli = db.Client.query.filter_by(phone=data['phone']).first()
+    if cli is not None:
+        return dumpResponse(403, "FB", "Client already exists!")
+    cli = db.Client(phone = data['phone'],
+                    secret = db.Client.randSecret(),
+                    name = data['name'])
+    if 'email' in data:
+        cli.email = data['email']
+    db.db.session.add(cli)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "phone" : cli.phone,
+                    "secret": cli.secret,
+                    "name"  : cli.name,
+                    "email" : cli.email,
+                })
+
+@app.route('/opr/client/order')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def opr_client_order():
+    data = json.loads(request.args['data'])
+    cli = db.Client.query.filter_by(phone=data["phone"]).first()
+    if cli is None:
+        return dumpResponse(403, "FB", "No client found!")
+    dishes = ' '.join(str(dish["id"])+':'+str(dish["amount"]) for dish in data['dishes'])
+    db.db.session.add(db.Maybeorder(address=data["address"],
+                                    client_id=cli.id,
+                                    dishes=dishes))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
 
 @app.route('/drv/delivery/list')
 @checkArgs(['login', 'token'])

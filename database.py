@@ -5,8 +5,8 @@ import random
 
 db = SQLAlchemy()
 
-def randStr(length):
-    return ''.join(random.choice(ascii_letters + digits) for _ in range(length))
+def randStr(length, charset):
+    return ''.join(random.choice(charset) for _ in range(length))
 
 _NAME_SIZE = 32
 _NUMBER_SIZE = 16
@@ -76,7 +76,7 @@ class Client(db.Model):
 
     @classmethod
     def randSecret(cls):
-        return randStr(_SECRET_SIZE)
+        return randStr(_SECRET_SIZE, digits)
 
     @classmethod
     def isValidPhone(cls, phone):
@@ -114,7 +114,7 @@ class Employee(db.Model):
 
     @classmethod
     def randToken(cls):
-        return randStr(_TOKEN_SIZE)
+        return randStr(_TOKEN_SIZE, ascii_letters+digits)
 
 class Driver(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
