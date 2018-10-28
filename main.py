@@ -1021,7 +1021,7 @@ def stats_order_list():
                     "client_phone"  : order.client.phone,
                     "address"       : order.address,
                     "dish_id"       : order.dish_id,
-                    "dish_name"     : order.dish_name,
+                    "dish_name"     : order.dish.name,
                     "money"         : order.money,
                 }
                 for order in db.Archivedorder.query.all()
