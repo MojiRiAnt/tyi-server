@@ -66,6 +66,15 @@ class Delivery(db.Model):
     driver_id       = db.Column(db.Integer, db.ForeignKey('driver.id'), default=-1)
     driver          = db.relationship('Driver', backref=db.backref('deliveries'), lazy=True)
 
+class Archivedorder(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
+    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
+    client          = db.relationship('Client', backref=db.backref('archivedorders'), lazy=True)
+    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
+    dish            = db.relationship('Dish', backref=db.backref('archivedorders'), lazy=True)
+    money           = db.Column(db.Integer, nullable=False)
+
 #================[USERS MANAGEMENT]===============
 
 class Emptyclient(db.Model):

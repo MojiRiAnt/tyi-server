@@ -991,6 +991,13 @@ def drv_claim_list():
 def drv_claim_confirm():
     data = json.loads(request.args['data'])
     delivery = db.Delivery.query.filter_by(id=data['id']).first()
+    for struct in delivery.dishes.split():
+        id, amount = struct.split(':')
+        for _ in range(amount):
+            db.db.session.add(db.Archivedorder(address = delivery.address,
+                                            client_id = delivery.client_id,
+                                            dish_id=id,
+                                            money=db.Dish.query.filter_by(id=id).first().price))
     db.db.session.delete(delivery)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success")
@@ -1005,6 +1012,20 @@ def drv_claim_decline():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
+@app.route('/stats/order/list')
+def stats_order_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "client_id"     : order.client_id,
+                    "client_phone"  : order.client.phone,
+                    "address"       : order.address,
+                    "dish_id"       : order.dish_id,
+                    "dish_name"     : order.dish_name,
+                    "money"         : order.money,
+                }
+                for order in db.Archivedorder.query.all()
+            ])
 
 if __name__ == '__main__':
 
