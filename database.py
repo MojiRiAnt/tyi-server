@@ -50,7 +50,7 @@ class Order(db.Model):
     @classmethod
     def newNumber(cls):
         res = randStr(_NUMBER_SIZE, digits)
-        while db.Maybeorder.query.filter_by(number=res).first() is not None and db.Order.query.filter_by(number=res).first() is not None and db.Delivery.query.filter_by(number=res).first() is not None:
+        while Maybeorder.query.filter_by(number=res).first() is not None and Order.query.filter_by(number=res).first() is not None and Delivery.query.filter_by(number=res).first() is not None:
             res = randStr(_NUMBER_SIZE, digits)
         return res
 
