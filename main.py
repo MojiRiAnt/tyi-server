@@ -677,7 +677,7 @@ def cli_delivery_list():
                 for delivery in db.Delivery.query.filter(db.Delivery.client.has(phone=request.args['phone'])).all()
             ])
 
-@app.route('/cli/auth/add')
+@app.route('/cli/auth/check')
 @checkArgs(['phone'])
 def cli_auth_try():
     cli = db.Client.query.filter_by(phone=request.args['phone']).first()
