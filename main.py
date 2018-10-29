@@ -986,6 +986,7 @@ def drv_claim_list():
                     "dishes"        : delivery.dishes,
                     "cafe_id"       : delivery.cafe_id,
                     "cafe_name"     : delivery.cafe.name,
+                    "price"         : delivery.price,
                 }
                 for delivery in db.Delivery.query.filter_by(driver_id=driver.id).all()
             ])
@@ -1016,6 +1017,19 @@ def drv_claim_decline():
     db.db.session.delete(delivery)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
+
+@app.route('/drv/dish/info')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Operator'])
+def drv_dish_info():
+    data = json.loads(request.args['data'])
+    dish = db.Dish.query.filter_by(id=data['id']).first()
+    if dish is None:
+        return dumpResponse(404, "NF", "No dish found!")
+    return dumpResponse(200, "OK", "Success!",
+            {
+                "name" : dish.name,
+            })
 
 @app.route('/stats/order/list')
 def stats_order_list():
