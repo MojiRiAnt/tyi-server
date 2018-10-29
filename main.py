@@ -676,6 +676,7 @@ def cli_delivery_list():
                     "id"        : delivery.id,
                     "address"   : delivery.address,
                     "dishes"    : delivery.dishes,
+                    "number"    : delivery.number,
                 }
                 for delivery in db.Delivery.query.filter(db.Delivery.client.has(phone=request.args['phone'])).all()
             ])

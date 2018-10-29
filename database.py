@@ -10,7 +10,7 @@ def randStr(length, charset):
 
 _NAME_SIZE = 32
 _NUMBER_SIZE = 16
-_ORDERNUMBER_SIZE = 5
+_ORDERNUMBER_SIZE = 8
 _CODE_SIZE = 16
 _TEXT_SIZE = 128
 _ADDRESS_SIZE = 32
@@ -49,9 +49,9 @@ class Order(db.Model):
 
     @classmethod
     def newNumber(cls):
-        res = randStr(_NUMBER_SIZE, digits)
+        res = randStr(_ORDERNUMBER_SIZE, digits)
         while Maybeorder.query.filter_by(number=res).first() is not None and Order.query.filter_by(number=res).first() is not None and Delivery.query.filter_by(number=res).first() is not None:
-            res = randStr(_NUMBER_SIZE, digits)
+            res = randStr(_ORDERNUMBER_SIZE, digits)
         return res
 
 class Delivery(db.Model):
