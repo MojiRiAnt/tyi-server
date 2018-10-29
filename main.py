@@ -249,6 +249,9 @@ def mng_supply_list():
 def mng_supply_remove():
     data = json.loads(request.args['data'])
     supply = db.Supply.query.filter_by(id=data['id']).first()
+    db.db.session.add(db.Archivedsupply(invoice_number=supply.invoice.number,
+                                        cafe_name=supply.cafe.name,
+                                        foodstuff_code=supply.foorstuff_code))
     supply.amount = data['amount']
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -1028,6 +1031,30 @@ def stats_order_list():
                 for order in db.Archivedorder.query.all()
             ])
 
+@app.route('/stats/warehouse/amounts')
+def stats_warehouse_amounts():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "name"      : foodstuff.name,
+                    "amount"    : sum(supply.amount for supply in foodstuff.supplies),
+                }
+                for foodstuff in db.Foodstuff.query.all()
+            ])
+
+@app.route('/stats/supply/list')
+def stats_supply_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "removal"           : order.removal,
+                    "invoice_number"    : order.invoice_number,
+                    "cafe_name"         : order.cafe_name,
+                    "foodstuff_code"    : order.foodstuff_code,
+                }
+                for order in db.Archivedorder.query.all()
+            ])
+
 if __name__ == '__main__':
 
     with app.app_context():
@@ -1090,6 +1117,8 @@ if __name__ == '__main__':
                                     measurement_unit=dish["measurement"],
                                     cooking_time=dish["cooking_time"],
                                     category_name=category.name)
+                if "photo" in dish:
+                    new_dish.photo = dish["photo"]
                 db.db.session.add(new_dish)
                 new_dish = db.Dish.query.filter_by(name=dish["name"]).first()
 

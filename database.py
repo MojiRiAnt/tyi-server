@@ -179,6 +179,13 @@ class Supply(db.Model):
     invoice_id      = db.Column(db.Integer, db.ForeignKey('invoice.id'), default=-1)
     invoice         = db.relationship('Invoice', backref=db.backref('supplies'), lazy=True)
 
+class Archivedsupply(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    removal         = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    invoice_number  = db.Column(db.String(_NUMBER_SIZE), nullable=False)
+    cafe_name       = db.Column(db.String(_NAME_SIZE), nullable=False)
+    foodstuff_code  = db.Column(db.String(_CODE_SIZE), nullable=False)
+
 class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     code            = db.Column(db.String(_CODE_SIZE), nullable=False)

@@ -10,6 +10,7 @@
                 "measurement" : "g",
                 "cooking_time" : 10,
                 "description" : "Чудейснейшая пицца! Её благословили еще во времена фараона, потому что наши повара хорошо её готовили.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/1.jpg",
                 "ingredients" :
                 [
                     {
@@ -25,6 +26,7 @@
                 "measurement" : "g",
                 "cooking_time" : 10,
                 "description" : "Настоящий classic, я бы даже сказал pleasantly! Тем не менее, совсем не margarita!",
+                "photo" : "http://bizzarepizza.xyz/images/menu/2.jpg",
                 "ingredients" :
                 [
                     {
@@ -40,6 +42,7 @@
                 "measurement" : "g",
                 "cooking_time" : 20,
                 "description": "Одобрено Посейдоном, приготовлено с любовью. Прямиком из тихого океана.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/3.jpg",
                 "ingredients" :
                  [
                      {
@@ -73,6 +76,7 @@
                 "measurement" : "g",
                 "cooking_time" : 10,
                 "description" : "Осторожно! Может загипнотизировать!",
+                "photo" : "http://bizzarepizza.xyz/images/menu/4.jpg",
                 "ingredients" :
                 [
                     {
@@ -96,6 +100,7 @@
                 "measurement" : "g",
                 "cooking_time" : 5,
                 "description" : "Бенедикт Кукумбер одобряет!",
+                "photo" : "http://bizzarepizza.xyz/images/menu/5.jpg",
                 "ingredients" :
                 [
                     {
@@ -123,6 +128,7 @@
                 "measurement" : "g",
                 "cooking_time" : 10,
                 "description" : "В сочетании с морской пиццей можно родиться заново!",
+                "photo" : "http://bizzarepizza.xyz/images/menu/6.jpg",
                 "ingredients" :
                 [
                     {
@@ -150,6 +156,7 @@
                 "measurement" : "g",
                 "cooking_time" : 10,
                 "description" : "Почувствуйте настоящее фруктовое наслаждение. Этот салат способен отправить вас в назабываемое путешествие по тропическим пляжам.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/7.jpg",
                 "ingredients" :
                 [
                     {
@@ -182,6 +189,7 @@
                 "amount" : 400,
                 "measurement" : "мл",
                 "description" : "Самая обыкновенная вода. Всегда освежает и приводит в чувства. Одним из главных достоинств является то, что её не обидно пролить на костюм.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/8.jpg",
                 "cooking_time" : 1,
                 "ingredients" :
                 [
@@ -198,6 +206,7 @@
                 "measurement" : "мл",
                 "cooking_time" : 1,
                 "description" : "Не только еда, но и отличная мебель.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/9.jpg",
                 "ingredients" :
                 [
                     {
@@ -213,6 +222,7 @@
                 "measurement" : "мл",
                 "cooking_time" : 1,
                 "description" : "Смакуй з кока-кола.",
+                "photo" : "http://bizzarepizza.xyz/images/menu/10.jpg",
                 "ingredients" :
                 [
                     {
@@ -228,6 +238,7 @@
                 "measurement" : "мл",
                 "cooking_time" : 1,
                 "description" : "Адская помесь!",
+                "photo" : "http://bizzarepizza.xyz/images/menu/11.jpg",
                 "ingredients" :
                 [
                     {
@@ -253,6 +264,7 @@
                 "measurement" : "г",
                 "cooking_time" : 1,
                 "description" : "Любимая закуска нашего первого клиента",
+                "photo" : "http://bizzarepizza.xyz/images/menu/12.jpg",
                 "ingredients" :
                 [
                     {
@@ -272,6 +284,7 @@
                 "measurement" : "г",
                 "cooking_time" : 1,
                 "description" : "Слышишь хруст? А он есть…",
+                "photo" : "http://bizzarepizza.xyz/images/menu/13.jpg",
                 "ingredients" :
                 [
                     {
