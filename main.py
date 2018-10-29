@@ -1067,12 +1067,12 @@ def stats_supply_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "removal"           : order.removal,
-                    "invoice_number"    : order.invoice_number,
-                    "cafe_name"         : order.cafe_name,
-                    "foodstuff_code"    : order.foodstuff_code,
+                    "removal"           : supply.removal,
+                    "invoice_number"    : supply.invoice_number,
+                    "cafe_name"         : supply.cafe_name,
+                    "foodstuff_code"    : supply.foodstuff_code,
                 }
-                for order in db.Archivedorder.query.all()
+                for supply in db.Archivedsupply.query.all()
             ])
 
 if __name__ == '__main__':
