@@ -1,7 +1,7 @@
 from flask      import Flask, request 
 from flask_cors import CORS
 import json
-from datetime   import datetime
+from datetime   import datetime, timedelta
 from functools  import wraps
 
 app = Flask(__name__)
@@ -804,7 +804,8 @@ def opr_maybeorder_approve():
                                 dishes = maybeorder.dishes,
                                 client_id = maybeorder.client_id,
                                 cafe_id = operator.cafe_id,
-                                number = maybeorder.number))
+                                number = maybeorder.number,
+                                ordered = maybeorder.ordered))
     db.db.session.delete(maybeorder)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -852,7 +853,8 @@ def opr_order_setcooked():
                                     dishes=order.dishes,
                                     client_id=order.client_id,
                                     cafe_id=order.cafe_id,
-                                    number=order.number))
+                                    number=order.number,
+                                    ordered=order.ordered))
     db.db.session.delete(order)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -1003,7 +1005,8 @@ def drv_claim_confirm():
             db.db.session.add(db.Archivedorder(address = delivery.address,
                                             client_id = delivery.client_id,
                                             dish_id=id,
-                                            money=db.Dish.query.filter_by(id=id).first().price))
+                                            money=db.Dish.query.filter_by(id=id).first().price),
+                                            waiting_time=(datetime.now()-delivery.ordered).seconds//60)
     db.db.session.delete(delivery)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success")
@@ -1043,6 +1046,7 @@ def stats_order_list():
                     "dish_name"     : order.dish.name,
                     "money"         : order.money,
                     "date"          : order.date,
+                    "waiting_time"  : order.waiting_time,
                 }
                 for order in db.Archivedorder.query.all()
             ])

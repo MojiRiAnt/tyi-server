@@ -35,7 +35,7 @@ class Maybeorder(db.Model):
     client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
     client          = db.relationship('Client', backref=db.backref('maybeorders'), lazy=True)
     dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
-    #number          = db.Column(db.String(_))
+    ordered         = db.Column(db.Datetime, nullable=False, default=datetime.now())
 
 class Order(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -46,6 +46,7 @@ class Order(db.Model):
     dishes          = db.Column(db.String(_DISHESLIST_SIZE), nullable=False)
     cafe_id         = db.Column(db.Integer, db.ForeignKey('cafe.id'), default=-1)
     cafe            = db.relationship('Cafe', backref=db.backref('orders'), lazy=True)
+    ordered         = db.Column(db.Datetime, nullable=False)
 
     @classmethod
     def newNumber(cls):
@@ -65,6 +66,7 @@ class Delivery(db.Model):
     cafe            = db.relationship('Cafe', backref=db.backref('deliveries'), lazy=True)
     driver_id       = db.Column(db.Integer, db.ForeignKey('driver.id'), default=-1)
     driver          = db.relationship('Driver', backref=db.backref('deliveries'), lazy=True)
+    ordered         = db.Column(db.Datetime, nullable=False)
 
 class Archivedorder(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -75,6 +77,7 @@ class Archivedorder(db.Model):
     dish            = db.relationship('Dish', backref=db.backref('archivedorders'), lazy=True)
     money           = db.Column(db.Integer, nullable=False)
     date            = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    waiting_time    = db.Column(db.Integer, nullable=False)
 
 #================[USERS MANAGEMENT]===============
 
