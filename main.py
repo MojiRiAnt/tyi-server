@@ -1020,7 +1020,7 @@ def drv_claim_decline():
 
 @app.route('/drv/dish/info')
 @checkArgs(['login', 'token', 'data'])
-@checkEmployee(db.Role['Operator'])
+@checkDiver()
 def drv_dish_info():
     data = json.loads(request.args['data'])
     dish = db.Dish.query.filter_by(id=data['id']).first()
