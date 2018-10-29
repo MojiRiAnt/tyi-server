@@ -1037,7 +1037,7 @@ def stats_order_list():
             [
                 {
                     "client_id"     : order.client_id,
-                    "client_phone"  : order.client.phone,
+                    "client_phone"  : -1 if order.client is None else order.client.phone,
                     "address"       : order.address,
                     "dish_id"       : order.dish_id,
                     "dish_name"     : order.dish.name,
@@ -1175,6 +1175,17 @@ if __name__ == '__main__':
             if "token" in driver:
                 drv.token = driver["token"]
             db.db.session.add(drv)
+
+       #LOAD Archivedorder
+        with open('resources/misc/archivedorders.json') as f:
+            orders = json.load(f)
+
+        for data in orders:
+            db.db.session.add(db.Archivedorder(address=data["address"],
+                                                client_id=data["client_id"],
+                                                dish_id=data["dish_id"],
+                                                money=data["money"],
+                                                date=data["date"]))
 
         db.db.session.commit()
         
