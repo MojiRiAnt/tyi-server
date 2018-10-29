@@ -4,6 +4,7 @@
         "client_id" : -1,
         "dish_id" : 1,
         "money" : 100,
-        "date" : "2018-05-03"
+        "date" : "2018-05-03",
+        "waiting_time" : 15
     }
 ]

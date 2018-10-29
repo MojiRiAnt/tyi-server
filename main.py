@@ -1189,7 +1189,8 @@ if __name__ == '__main__':
                                                 client_id=data["client_id"],
                                                 dish_id=data["dish_id"],
                                                 money=data["money"],
-                                                date=data["date"]))
+                                                date=data["date"],
+                                                waiting_time=data["waiting_time"]))
 
         db.db.session.commit()
         
