@@ -930,7 +930,8 @@ def opr_client_order():
     dishes = ' '.join(str(dish["id"])+':'+str(dish["amount"]) for dish in data['dishes'])
     db.db.session.add(db.Maybeorder(address=data["address"],
                                     client_id=cli.id,
-                                    dishes=dishes))
+                                    dishes=dishes,
+                                    number=db.Order.newNumber()))
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
