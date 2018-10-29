@@ -74,6 +74,7 @@ class Archivedorder(db.Model):
     dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
     dish            = db.relationship('Dish', backref=db.backref('archivedorders'), lazy=True)
     money           = db.Column(db.Integer, nullable=False)
+    date            = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
 
 #================[USERS MANAGEMENT]===============
 

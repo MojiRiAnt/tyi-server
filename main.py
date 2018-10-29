@@ -1042,6 +1042,7 @@ def stats_order_list():
                     "dish_id"       : order.dish_id,
                     "dish_name"     : order.dish.name,
                     "money"         : order.money,
+                    "date"          : order.date,
                 }
                 for order in db.Archivedorder.query.all()
             ])
