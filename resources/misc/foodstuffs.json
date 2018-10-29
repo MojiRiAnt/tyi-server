@@ -178,5 +178,10 @@
         "code": "XFTGVYLJO1",
         "name": "Coca-Cola",
         "measurement": "мл"
+    },
+    {
+        "code": "HSDIA7HASD",
+        "name": "Листья салата",
+        "measurement": "г"
     }
 ]
