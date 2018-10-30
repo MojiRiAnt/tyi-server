@@ -1,7 +1,7 @@
 [
     {
-        "name" : "Bizzarepizza Tobolska",
-        "address" : "vul. Tobolska, 42",
+        "name" : "Bizzarepizza Галицька",
+        "address" : "Івано-Франківськ, вулиця Галицька 28-А",
         "staff" : [
             {
                 "login" : "root",
@@ -15,7 +15,7 @@
                 "login" : "chopikus",
                 "name" : "Igor",
                 "token" : "12345",
-                "phone" : "+380123456789",
+                "phone" : "+380967188217",
                 "email" : "igor@xlv.zero",
                 "permission" : ["Cook", "Operator", "Manager", "Admin"]
             },
@@ -52,13 +52,13 @@
         ]
     },
     {
-        "name" : "Bizzarepizza Naukova",
-        "address" : "prosp. Nauky, 69",
+        "name" : "Bizzarepizza Грушевського",
+        "address" : "Івано-Франківськ, вулиця Грушевського 1",
         "staff" : []
     },
     {
-        "name" : "Bizzarepizza Ivana Franka",
-        "address" : "vul. Ivana Franka, 27",
+        "name" : "Bizzarepizza Станіславська",
+        "address" : "Івано-Франківськ, вулиця Станіславська, 11",
         "staff" : []
     }
 ]
