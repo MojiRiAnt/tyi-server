@@ -138,12 +138,15 @@ class Employee(db.Model):
     def randToken(cls):
         return randStr(_TOKEN_SIZE, ascii_letters+digits)
 
+class Emptydriver(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False, unique=True)
+    registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+
 class Driver(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
-    login           = db.Column(db.String(_NAME_SIZE), nullable=False)
-    #password        = db.Column(db.String(_PASSWORD_SIZE), nullable=False)
-    token           = db.Column(db.String(_TOKEN_SIZE), nullable=False)
-    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    phone           = db.Column(db.String(_PHONE_SIZE), nullable=False, unique=True)
+    secret          = db.Column(db.String(_TOKEN_SIZE), nullable=False)
     email           = db.Column(db.String(_EMAIL_SIZE), nullable=False)
     registered_date = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     #deliveries <- Delivery

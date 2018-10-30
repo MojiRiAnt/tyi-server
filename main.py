@@ -57,10 +57,10 @@ def checkDriver():
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            drv = db.Driver.query.filter_by(login=request.args['login']).first()
+            drv = db.Driver.query.filter_by(phone=request.args['phone']).first()
             if drv is None:
                 return dumpResponse(404, "NF", "No driver found!")
-            if drv.token != request.args['token']:
+            if drv.secret != request.args['secret']:
                 return dumpResponse(401, "NA", "Incorrect token!")
             return func(*args, **kwargs)
         return wrapper
@@ -355,10 +355,10 @@ def mng_dish_list():
                     [
                         {
                             "amount" : link.amount,
-                            "foodstuff_code" : link.foodstuff_code,
-                            "foodstuff_name" : link.foodstuff.name,
-                            "foodstuff_photo": link.foodstuff.photo,
-                            "foodstuff_measurement_unit" : link.foodstuff.measurement_unit,
+                            "code" : link.foodstuff_code,
+                            "name" : link.foodstuff.name,
+                            "photo": link.foodstuff.photo,
+                            "measurement_unit" : link.foodstuff.measurement_unit,
                         }
                         for link in db.Linkdishfoodstuff.query.filter_by(dish_id=dish.id)
                     ]
@@ -994,8 +994,40 @@ def opr_client_order():
     return dumpResponse(200, "OK", "Success!")
 
 
+@app.route('/drv/auth/check')
+@checkArgs(['phone'])
+def drv_auth_check():
+    dri = db.Driver.query.filter_by(phone=request.args['phone']).first()
+    edri = db.Driver.query.filter_by(phone=request.args['phone']).first()
+    if dri is None and edri is None:
+        db.db.session.add(db.Emptydriver(phone=request.args['phone'])
+        db.db.session.commit()
+        return dumpResponse(200, "OK", "Success!",
+                {
+                    "verified" : False, 
+                })
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "verified" : dri is not None,
+                })
+
+@app.route('/drv/auth/login')
+@checkArgs(['phone', 'secret'])
+@checkDriver()
+def drv_auth_login():
+    dri = db.Driver.query.filter_by(phone=request.args['phone']).first()
+    dri.secret = db.Client.randSecret()
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!",
+                {
+                    "phone" : dri.phone,
+                    "name"  : dri.name,
+                    "email" : dri.email,
+                    "secret": dri.secret,
+                })
+
 @app.route('/drv/delivery/list')
-@checkArgs(['login', 'token'])
+@checkArgs(['phone', 'secret'])
 @checkDriver()
 def drv_delivery_list():
     return dumpResponse(200, "OK", "Success!",
@@ -1013,11 +1045,11 @@ def drv_delivery_list():
             ])
 
 @app.route('/drv/delivery/claim')
-@checkArgs(['login', 'token', 'data'])
+@checkArgs(['phone', 'secret', 'data'])
 @checkDriver()
 def drv_delivery_claim():
     data = json.loads(request.args['data'])
-    driver = db.Driver.query.filter_by(login=request.args['login']).first()
+    driver = db.Driver.query.filter_by(phone=request.args['phone']).first()
     delivery = db.Delivery.query.filter_by(id=data['id']).first()
     if delivery.driver_id != -1:
         return dumpResponse(403, "AT", "Delivery already taken!")
@@ -1026,10 +1058,10 @@ def drv_delivery_claim():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/drv/claim/list')
-@checkArgs(['login', 'token'])
+@checkArgs(['phone', 'secret'])
 @checkDriver()
 def drv_claim_list():
-    driver = db.Driver.query.filter_by(login=request.args['login']).first()
+    driver = db.Driver.query.filter_by(phone=request.args['phone']).first()
     return dumpResponse(200, "OK", "Success!",
             [
                 {
@@ -1046,7 +1078,7 @@ def drv_claim_list():
             ])
 
 @app.route('/drv/claim/confirm')
-@checkArgs(['login', 'token', 'data'])
+@checkArgs(['phone', 'secret', 'data'])
 @checkDriver()
 def drv_claim_confirm():
     data = json.loads(request.args['data'])
@@ -1064,7 +1096,7 @@ def drv_claim_confirm():
     return dumpResponse(200, "OK", "Success")
 
 @app.route('/drv/claim/decline')
-@checkArgs(['login', 'token', 'data'])
+@checkArgs(['phone', 'secret', 'data'])
 @checkDriver()
 def drv_claim_decline():
     data = json.loads(request.args['data'])
@@ -1074,7 +1106,7 @@ def drv_claim_decline():
     return dumpResponse(200, "OK", "Success!")
 
 @app.route('/drv/dish/info')
-@checkArgs(['login', 'token', 'data'])
+@checkArgs(['phone', 'secret', 'data'])
 @checkDriver()
 def drv_dish_info():
     data = json.loads(request.args['data'])
