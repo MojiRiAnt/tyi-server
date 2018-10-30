@@ -1048,7 +1048,7 @@ def drv_auth_check():
     dri = db.Driver.query.filter_by(phone=request.args['phone']).first()
     edri = db.Driver.query.filter_by(phone=request.args['phone']).first()
     if dri is None and edri is None:
-        db.db.session.add(db.Emptydriver(phone=request.args['phone'])
+        db.db.session.add(db.Emptydriver(phone=request.args['phone']))
         db.db.session.commit()
         return dumpResponse(200, "OK", "Success!",
                 {
