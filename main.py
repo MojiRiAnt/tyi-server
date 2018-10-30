@@ -1311,10 +1311,12 @@ if __name__ == '__main__':
             drivers = json.load(f)
 
         for driver in drivers:
-            drv = db.Driver(login=driver["login"],
-                            phone=driver["phone"],
+            drv = db.Driver(phone=driver["phone"],
+                            name=driver["name"],
                             email=driver["email"],
-                            token=db.Employee.randToken())
+                            registered_date=driver["registered_date"],
+                            license_number=driver["license_number"],
+                            secret=db.Client.randSecret())
             if "token" in driver:
                 drv.token = driver["token"]
             db.db.session.add(drv)

@@ -1,8 +1,9 @@
 [
     {
-        "login" : "test_driver",
-        "token" : "3",
         "phone" : "12345",
-        "email" : "driver@test.mail"
+        "name" : "test_driver",
+        "email" : "driver@test.mail",
+        "registered_date" : "21-02-2018",
+        "license_number" : "AA56FDVGS3"
     }
 ]
