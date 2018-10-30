@@ -71,10 +71,8 @@ class Delivery(db.Model):
 class Archivedorder(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     address         = db.Column(db.String(_ADDRESS_SIZE), nullable=False)
-    client_id       = db.Column(db.Integer, db.ForeignKey('client.id'), default=-1)
-    client          = db.relationship('Client', backref=db.backref('archivedorders'), lazy=True)
-    dish_id         = db.Column(db.Integer, db.ForeignKey('dish.id'), default=-1)
-    dish            = db.relationship('Dish', backref=db.backref('archivedorders'), lazy=True)
+    client_phone    = db.Column(db.String(_PHONE_SIZE), nullable=False)
+    dish_name       = db.Column(db.String(_NAME_SIZE), nullable=False)
     money           = db.Column(db.Integer, nullable=False)
     date            = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
     waiting_time    = db.Column(db.Integer, nullable=False)
@@ -186,9 +184,12 @@ class Supply(db.Model):
 class Archivedsupply(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
     removal         = db.Column(db.String(_DATE_SIZE), default=datetime.now().strftime('%Y-%m-%d'))
+    amount          = db.Column(db.Integer, nullable=False)
     invoice_number  = db.Column(db.String(_NUMBER_SIZE), nullable=False)
     cafe_name       = db.Column(db.String(_NAME_SIZE), nullable=False)
     foodstuff_code  = db.Column(db.String(_CODE_SIZE), nullable=False)
+    foodstuff_name  = db.Column(db.String(_NAME_SIZE), nullable=False)
+    foodstuff_category_name = db.Column(db.String(_NAME_SIZE), nullable=False)
 
 class Foodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)
@@ -199,6 +200,13 @@ class Foodstuff(db.Model):
     #linkdishes <- Linkdishfoodstuff <- Dish
     measurement_unit= db.Column(db.String(_MEAS_SIZE), db.ForeignKey('measurement.unit'), default="")
     measurement     = db.relationship('Measurement', backref=db.backref('foodstuffs'), lazy=True)
+    category_name   = db.Column(db.String(_NAME_SIZE), db.ForeignKey('foodstuffcategory.name'), default="")
+    category        = db.relationship('Foodstuffcategory', backref=db.backref('foodstuffs'), lazy=True)
+
+class Foodstuffcategory(db.Model):
+    id              = db.Column(db.Integer, primary_key=True)
+    name            = db.Column(db.String(_NAME_SIZE), nullable=False, unique=True)
+    #foodstuffs <- Foodstuff
 
 class Linkdishfoodstuff(db.Model):
     id              = db.Column(db.Integer, primary_key=True)

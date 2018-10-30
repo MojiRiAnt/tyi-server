@@ -239,6 +239,7 @@ def mng_supply_list():
                     "measurement_unit"  : supply.foodstuff.measurement_unit,
                     "code"              : supply.foodstuff.code,
                     "photo"             : supply.foodstuff.photo,
+                    "category"          : supply.foodstuff.category_name,
                 }
                 for supply in supplies.all()
             ])
@@ -251,7 +252,10 @@ def mng_supply_remove():
     supply = db.Supply.query.filter_by(id=data['id']).first()
     db.db.session.add(db.Archivedsupply(invoice_number=supply.invoice.number,
                                         cafe_name=supply.cafe.name,
-                                        foodstuff_code=supply.foorstuff_code))
+                                        foodstuff_code=supply.foodstuff_code,
+                                        amount=supply.amount-data['amount'],
+                                        foodstuff_name=supply.foodstuff.name,
+                                        foodstuff_category_name=supply.foodstuff.category_name))
     supply.amount = data['amount']
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -268,6 +272,7 @@ def mng_foodstuff_list():
                     "name"              : foodstuff.name,
                     "measurement_unit"  : foodstuff.measurement_unit,
                     "photo"             : foodstuff.photo,
+                    "category"          : foodstuff.category_name,
                 }
                 for foodstuff in db.Foodstuff.query.all()
             ])
@@ -279,7 +284,8 @@ def mng_foodstuff_add():
     data = json.loads(request.args['data'])
     db.db.session.add(db.Foodstuff(code=data["code"],
                                     name=data["name"],
-                                    measurement_unit=data["measurement_unit"]))
+                                    measurement_unit=data["measurement_unit"],
+                                    category_name=data["category_name"]))
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
@@ -292,6 +298,7 @@ def mng_foodstuff_edit():
     foodstuff.code=data["code"]
     foodstuff.name=data["name"]
     foodstuff.measurement_unit=data["measurement_unit"]
+    foodstuff.category_name=data["category_name"]
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
@@ -312,6 +319,7 @@ def mng_foodstuff_info():
                     "name"              : foodstuff.name,
                     "photo"             : foodstuff.photo,
                     "measurement_unit"  : foodstuff.measurement_unit,
+                    "category_name"     : foodstuff.category_name,
                 })
 
 @app.route('/mng/measurement/list')
@@ -453,6 +461,50 @@ def mng_dishcategory_delete():
     cat = db.Dishcategory.query.filter_by(id=data['id']).first()
     if cat.dishes != []:
         return dumpResponse(403, "FB", "There're dishes in this category!")
+    db.db.session.delete(cat)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/foodstuffcategory/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuffcategory_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"    : cat.id,
+                    "name"  : cat.name,
+                }
+                for cat in db.Foodstuffcategory.query.all()
+            ])
+
+@app.route('/mng/foodstuffcategory/add')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuffcategory_add():
+    data = json.loads(request.args['data'])
+    db.db.session.add(db.Foodstuffcategory(name=data['name']))
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success")
+
+@app.route('/mng/foodstuffcategory/edit')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuffcategory_edit():
+    data = json.loads(request.args['data'])
+    cat = db.Foodstuffcategory.query.filter_by(id=data['id']).first()
+    cat.name = data['name']
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/mng/foodstuffcategory/delete')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Manager'])
+def mng_foodstuffcategory_delete():
+    data = json.loads(request.args['data'])
+    cat = db.Foodstuffcategory.query.filter_by(id=data['id']).first()
+    if cat.foodstuffs != []:
+        return dumpResponse(403, "FB", "There're foodstuffs in this category!")
     db.db.session.delete(cat)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
@@ -1003,10 +1055,10 @@ def drv_claim_confirm():
         id, amount = [int(x) for x in struct.split(':')]
         for _ in range(amount):
             db.db.session.add(db.Archivedorder(address = delivery.address,
-                                            client_id = delivery.client_id,
-                                            dish_id=id,
-                                            money=db.Dish.query.filter_by(id=id).first().price),
-                                            waiting_time=(datetime.now()-delivery.ordered).seconds//60)
+                                            client_phone = delivery.client.phone,
+                                            dish_name=db.Dish.query.filter_by(id=id).first().name,
+                                            money=db.Dish.query.filter_by(id=id).first().price,
+                                            waiting_time=(datetime.now()-delivery.ordered).seconds//60))
     db.db.session.delete(delivery)
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success")
@@ -1034,16 +1086,15 @@ def drv_dish_info():
                 "name" : dish.name,
             })
 
+
 @app.route('/stats/order/list')
 def stats_order_list():
     return dumpResponse(200, "OK", "Success!",
             [
                 {
-                    "client_id"     : order.client_id,
-                    "client_phone"  : -1 if order.client is None else order.client.phone,
+                    "client_phone"  : order.client_phone,
                     "address"       : order.address,
-                    "dish_id"       : order.dish_id,
-                    "dish_name"     : order.dish.name,
+                    "dish_name"     : order.dish_name,
                     "money"         : order.money,
                     "date"          : order.date,
                     "waiting_time"  : order.waiting_time,
@@ -1057,6 +1108,7 @@ def stats_warehouse_amounts():
             [
                 {
                     "name"      : foodstuff.name,
+                    "category"  : foodstuff.category_name,
                     "amount"    : sum(supply.amount for supply in foodstuff.supplies),
                 }
                 for foodstuff in db.Foodstuff.query.all()
@@ -1068,9 +1120,12 @@ def stats_supply_list():
             [
                 {
                     "removal"           : supply.removal,
+                    "amount"            : supply.amount,
                     "invoice_number"    : supply.invoice_number,
                     "cafe_name"         : supply.cafe_name,
                     "foodstuff_code"    : supply.foodstuff_code,
+                    "foodstuff_name"    : supply.foodstuff_name,
+                    "foodstuff_category": supply.foodstuff_category_name,
                 }
                 for supply in db.Archivedsupply.query.all()
             ])
@@ -1110,14 +1165,18 @@ if __name__ == '__main__':
         with open('resources/misc/foodstuffs.json') as f:
             models = json.load(f)
 
-        for foodstuff in models:
-            measurement = db.Measurement.query.filter_by(unit=foodstuff['measurement']).first()
-            if measurement is None:
-                db.db.session.add(db.Measurement(unit=foodstuff['measurement']))
-            
-            db.db.session.add(db.Foodstuff(code=foodstuff['code'],
-                                            name=foodstuff['name'],
-                                            measurement_unit=foodstuff['measurement']))
+        for data in models:
+            category = db.Foodstuffcategory(name=data["name"])
+            for foodstuff in data['foodstuffs']:
+                measurement = db.Measurement.query.filter_by(unit=foodstuff['measurement']).first()
+                if measurement is None:
+                    db.db.session.add(db.Measurement(unit=foodstuff['measurement']))
+                
+                db.db.session.add(db.Foodstuff(code=foodstuff['code'],
+                                                name=foodstuff['name'],
+                                                measurement_unit=foodstuff['measurement'],
+                                                category_name=category.name))
+            db.db.session.add(category)
 
        #LOAD Dish, Dishcategory, Linkdishfoodstuff
         with open('resources/misc/dishes.json') as f:
@@ -1186,8 +1245,8 @@ if __name__ == '__main__':
 
         for data in orders:
             db.db.session.add(db.Archivedorder(address=data["address"],
-                                                client_id=data["client_id"],
-                                                dish_id=data["dish_id"],
+                                                client_phone=data["client_phone"],
+                                                dish_name=data["dish_name"],
                                                 money=data["money"],
                                                 date=data["date"],
                                                 waiting_time=data["waiting_time"]))
