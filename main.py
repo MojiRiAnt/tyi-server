@@ -635,6 +635,54 @@ def adm_employee_edit():
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
 
+@app.route('/adm/emptydriver/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Admin'])
+def adm_emptydriver_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id"    : dri.id,
+                    "phone" : dri.phone,
+                    "secret": dri.secret,
+                    "reqistered_date" : dri.registered_date,
+                }
+                for dri in db.Emptydriver.query.all()
+            ])
+
+@app.route('/adm/emptydriver/register')
+@checkArgs(['login', 'token', 'data'])
+@checkEmployee(db.Role['Admin'])
+def adm_emptydriver_register():
+    data = json.loads(request.args['data'])
+    edri = db.Emptydriver.query.filter_by(id=data['id']).first()
+    db.db.session.add(db.Driver(phone=edri.phone,
+                                registered_date=edri.registered_date,
+                                secret=db.Client.randSecret(),
+                                name=data["name"],
+                                email=data["email"],
+                                license_number=data["license_number"]))
+    db.db.session.delete(edri)
+    db.db.session.commit()
+    return dumpResponse(200, "OK", "Success!")
+
+@app.route('/adm/driver/list')
+@checkArgs(['login', 'token'])
+@checkEmployee(db.Role['Admin'])
+def adm_driver_list():
+    return dumpResponse(200, "OK", "Success!",
+            [
+                {
+                    "id" : dri.id,
+                    "name" : dri.name,
+                    "email" : dri.email,
+                    "phone" : dri.phone,
+                    "registered" : dri.registered_date,
+                    "license_number" : dri.license_number,
+                }
+                for dri in db.Driver.query.all()
+            ])
+
 
 @app.route('/cli/dish/list')
 @checkArgs(['phone', 'secret'])
