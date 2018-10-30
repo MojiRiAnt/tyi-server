@@ -1166,6 +1166,20 @@ def drv_dish_info():
                 "name" : dish.name,
             })
 
+@app.route('/drv/cafe/info')
+@checkArgs(['phone', 'secret', 'data'])
+@checkDriver()
+def drv_cafe_info():
+    data = json.loads(request.args['data'])
+    cafe = db.Cafe.query.filter_by(id=data['id']).first()
+    if cafe is None:
+        return dumpResponse(404, "NF", "No cafe found!")
+    return dumpResponse(200, "OK", "Success!",
+            {
+                "name" : cafe.name,
+                "address" : cafe.address,
+            })
+
 
 @app.route('/stats/order/list')
 def stats_order_list():
