@@ -26,7 +26,7 @@ def dumpResponse(response, msg_short, msg, data=None):
             "message" : msg,
         },
         "data" : data,
-    }, indent=4)
+    }, indent=4, ensure_ascii=False)
 
 def checkArgs(expected_args):
     def decorator(func):
