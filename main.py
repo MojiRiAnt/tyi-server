@@ -644,7 +644,6 @@ def adm_emptydriver_list():
                 {
                     "id"    : dri.id,
                     "phone" : dri.phone,
-                    "secret": dri.secret,
                     "reqistered_date" : dri.registered_date,
                 }
                 for dri in db.Emptydriver.query.all()
