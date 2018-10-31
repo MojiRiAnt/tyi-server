@@ -1045,7 +1045,7 @@ def opr_client_order():
 @checkArgs(['phone'])
 def drv_auth_check():
     dri = db.Driver.query.filter_by(phone=request.args['phone']).first()
-    edri = db.Driver.query.filter_by(phone=request.args['phone']).first()
+    edri = db.Emptydriver.query.filter_by(phone=request.args['phone']).first()
     if dri is None and edri is None:
         db.db.session.add(db.Emptydriver(phone=request.args['phone']))
         db.db.session.commit()
@@ -1087,6 +1087,7 @@ def drv_delivery_list():
                     "dishes"        : delivery.dishes,
                     "cafe_id"       : delivery.cafe_id,
                     "cafe_name"     : delivery.cafe.name,
+                    "number"        : delivery.number,
                 }
                 for delivery in db.Delivery.query.filter_by(driver_id=-1).all()
             ])
@@ -1119,6 +1120,7 @@ def drv_claim_list():
                     "dishes"        : delivery.dishes,
                     "cafe_id"       : delivery.cafe_id,
                     "cafe_name"     : delivery.cafe.name,
+                    "number"        : delivery.number,
                 }
                 for delivery in db.Delivery.query.filter_by(driver_id=driver.id).all()
             ])

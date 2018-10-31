@@ -1,59 +1,35 @@
 [
     {
-        "name" : "Разное",
-        "foodstuffs":
-        [
-            {
-                "code" : "ASDF87812A",
-                "name" : "Сыр швейцарский",
-                "measurement" : "г"
-            },
-            {
+        "name" : "Овощи",
+       	"foodstuffs":
+	[
+	    {
                 "code": "RDL7E5JX67",
                 "name": "Чеснок",
                 "measurement": "г"
             },
-            {
-                "code": "YRBZDHEBMR",
-                "name": "Манго",
-                "measurement": "г"
-            },
-            {
+	    {
                 "code": "JOJIY2MVQJ",
                 "name": "Помидор",
                 "measurement": "г"
             },
-            {
-                "code": "0TC3PL9HIO",
-                "name": "Шоколад",
+	    {
+                "code": "IRUSGMVO9Y",
+                "name": "Огурец",
+                "measurement": "г"
+            }
+	]
+    },
+    {
+        "name" : "Фрукты",
+        "foodstuffs":
+	[
+	    {
+                "code": "YRBZDHEBMR",
+                "name": "Манго",
                 "measurement": "г"
             },
-            {
-                "code": "IR5QT7Y6ZM",
-                "name": "Крекер",
-                "measurement": "г"
-            },
-            {
-                "code": "E81LTIYDFX",
-                "name": "Подсолнечное масло",
-                "measurement": "мл"
-            },
-            {
-                "code": "E81LTIYWFF",
-                "name": "Сливочное масло",
-                "measurement": "г"
-            },
-            {
-                "code": "E81LTIYW2U",
-                "name": "Гречка",
-                "measurement": "г"
-            },
-            {
-                "code": "PM671LYW4T",
-                "name": "Куриное мясо",
-                "measurement": "г"
-            },
-            {
+ 	    {
                 "code": "PK4GWTOV48",
                 "name": "Персик",
                 "measurement": "г"
@@ -63,72 +39,84 @@
                 "name": "Яблоко",
                 "measurement": "г"
             },
-            {
+	    {
                 "code": "QOE8SXPPH0",
                 "name": "Ананас",
                 "measurement": "г"
             },
-            {
+            
+	]	
+    },
+    {
+        "name" : "Грибы",
+        "foodstuffs":
+	[
+	    {
                 "code": "UZLSWT7EBE",
                 "name": "Грибы",
                 "measurement": "г"
-            },
-            {
-                "code": "IRUSGMVO9Y",
-                "name": "Огурец",
-                "measurement": "г"
-            },
-            {
-                "code": "7MGWP96KAB",
-                "name": "Креветки",
-                "measurement": "г"
-            },
+            }
+	]
+    },
+    {
+        "name" : "Зелень",
+        "foodstuffs":
+	[
             {
                 "code": "5BG3UTM6E4",
                 "name": "Зелень",
                 "measurement": "г"
+            }
+	]
+    },
+    {
+        "name" : "Молочные продукты",
+        "foodstuffs":
+	[
+		  {
+                "code": "E81LTIYDFX",
+                "name": "Подсолнечное масло",
+                "measurement": "мл"
             },
             {
+                "code": "E81LTIYWFF",
+                "name": "Сливочное масло",
+                "measurement": "г"
+            },
+	]
+    },
+    {
+        "name" : "Мука, мучные изделия",
+        "foodstuffs":
+	[
+	    {
                 "code": "2H4RO7NIY8",
                 "name": "Хрустящий хлеб",
                 "measurement": "г"
+            },
+	]
+    },
+    {
+        "name" : "Сыр",
+        "foodstuffs":
+	[
+	    {
+                "code" : "ASDF87812A",
+                "name" : "Сыр швейцарский",
+                "measurement" : "г"
             },
             {
                 "code": "20D3JLXK1K",
                 "name": "Плавленый сыр",
                 "measurement": "г"
-            },
-            {
-                "code": "491ISMXD9T",
-                "name": "Масло «Эксклюзив»",
-                "measurement": "г"
-            },
-            {
-                "code": "7QI0SIBPRU",
-                "name": "Киви",
-                "measurement": "г"
-            },
-            {
-                "code": "S9OKME6A0B",
-                "name": "Лимон",
-                "measurement": "г"
-            },
-            {
-                "code": "6LCNI0WAYZ",
-                "name": "Каштан",
-                "measurement": "г"
-            },
-            {
-                "code": "6B1YGAJWBA",
-                "name": "Пломбир",
-                "measurement": "г"
-            },
-            {
-                "code": "WD9NNVZCKD",
-                "name": "Рис",
-                "measurement": "г"
-            },
-            {
+            }
+	]
+    },
+    {
+        "name" : "Мясо, мясная продукция",
+        "foodstuffs":
+	[
+		{
                 "code": "GRHUGTPBYJ",
                 "name": "Свинина",
                 "measurement": "г"
@@ -139,55 +127,40 @@
                 "measurement": "г"
             },
             {
-                "code": "WTR1337O",
-                "name" : "Питьевая вода",
-                "measurement": "мл"
-            },
-            {
-                "code": "ES8879ZB5Z",
-                "name": "Черная редька",
-                "measurement": "г"
-            },
-            {
-                "code": "SGMJH1LP2E",
-                "name": "Лук",
-                "measurement": "г"
-            },
-            {
                 "code": "OQ937AD90S",
                 "name": "Краб",
                 "measurement": "г"
             },
-            {
-                "code": "1RSR2AWZ8R",
-                "name": "Белая редька",
-                "measurement": "г"
-            },
-            {
-                "code": "SRN69JD0KW",
-                "name": "Молочный жир",
-                "measurement": "г"
-            },
-            {
-                "code": "R90J2Z99Q0",
-                "name": "Стебли сельдерея",
-                "measurement": "г"
-            },
+	]
+    },
+    {
+        "name" : "Напитки",
+        "foodstuffs":
+	[
             {
                 "code": "HSZEWT9NE6",
                 "name": "Pepsi",
                 "measurement": "мл"
-            },
+            },//Напитки
             {
                 "code": "XFTGVYLJO1",
                 "name": "Coca-Cola",
                 "measurement": "мл"
-            },
-            {
-                "code": "HSDIA7HASD",
-                "name": "Листья салата",
+            }
+	]
+    },
+ 
+    {
+        "name" : "Остальное",
+        "foodstuffs":
+	[
+	    {
+                "code": "IR5QT7Y6ZM",
+                "name": "Крекер",
                 "measurement": "г"
             }
-        ]
-    }
+	]
+    },
+
 ]
+//"Овощи","Фрукты", "Грибы", "Зелень", "Зерновые",  "Молочные продукты", "Мука, мучные изделия", "Сыр", "Мясо и мясная продукция", "Напитки",  "Орехи", "Остальное"
