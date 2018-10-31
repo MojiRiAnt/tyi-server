@@ -1119,7 +1119,6 @@ def drv_claim_list():
                     "dishes"        : delivery.dishes,
                     "cafe_id"       : delivery.cafe_id,
                     "cafe_name"     : delivery.cafe.name,
-                    "price"         : delivery.price,
                 }
                 for delivery in db.Delivery.query.filter_by(driver_id=driver.id).all()
             ])
