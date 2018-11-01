@@ -400,7 +400,7 @@ def mng_dish_edit():
     dish.measurement_unit = data['measurement_unit']
     dish.category_name = data['category_name']
     dish.linkfoodstuffs = [db.Linkdishfoodstuff(amount = ing['amount'],
-                                                    foodstuff_code = ing['foodstuff_code'])
+                                                    foodstuff_code = ing['code'])
                                 for ing in data['ingredients']]
     db.db.session.commit()
     return dumpResponse(200, "OK", "Success!")
