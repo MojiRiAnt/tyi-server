@@ -3,6 +3,7 @@ from flask_cors import CORS
 import json
 from datetime   import datetime, timedelta
 from functools  import wraps
+import sys
 
 app = Flask(__name__)
 app.config.update({
@@ -1227,127 +1228,130 @@ def stats_supply_list():
 if __name__ == '__main__':
 
     with app.app_context():
-        db.db.drop_all()
-        db.db.create_all()
-       
-       #LOAD Shipper
-        with open('resources/misc/shippers.json') as f:
-            models = json.load(f)
 
-        for shipper in models:
-            db.db.session.add(db.Shipper(name=shipper["name"],
-                                        contract_number=shipper["contract_number"],
-                                        contract_file=shipper["contract_file"],
-                                        phone=shipper["phone"]))
+        if '--nodrop' not in sys.argv:
+            db.db.drop_all()
+            db.db.create_all()
 
-       #LOAD Invoice, Supply
-        with open('resources/misc/invoices.json') as f:
-            models = json.load(f)
+        if '--load-db' in sys.argv:
+           #LOAD Shipper
+            with open('resources/misc/shippers.json') as f:
+                models = json.load(f)
 
-        for data in models:
-            invoice = db.Invoice(number=data['number'],
-                                cafe_id=data['cafe_id'],
-                                shipper_id=data['shipper_id'])
-            for supply in data['supplies']:
-                invoice.supplies.append(db.Supply(amount=supply['amount'],
-                                            foodstuff_code=supply['foodstuff_code'],
-                                            expiry=supply['expiry'],
-                                            cafe_id=data['cafe_id']))
-            db.db.session.add(invoice)
+            for shipper in models:
+                db.db.session.add(db.Shipper(name=shipper["name"],
+                                            contract_number=shipper["contract_number"],
+                                            contract_file=shipper["contract_file"],
+                                            phone=shipper["phone"]))
 
-       #LOAD Foodstuff
-        with open('resources/misc/foodstuffs.json') as f:
-            models = json.load(f)
+           #LOAD Invoice, Supply
+            with open('resources/misc/invoices.json') as f:
+                models = json.load(f)
 
-        for data in models:
-            category = db.Foodstuffcategory(name=data["name"])
-            for foodstuff in data['foodstuffs']:
-                measurement = db.Measurement.query.filter_by(unit=foodstuff['measurement']).first()
-                if measurement is None:
-                    db.db.session.add(db.Measurement(unit=foodstuff['measurement']))
-                
-                db.db.session.add(db.Foodstuff(code=foodstuff['code'],
-                                                name=foodstuff['name'],
-                                                measurement_unit=foodstuff['measurement'],
-                                                category_name=category.name))
-            db.db.session.add(category)
+            for data in models:
+                invoice = db.Invoice(number=data['number'],
+                                    cafe_id=data['cafe_id'],
+                                    shipper_id=data['shipper_id'])
+                for supply in data['supplies']:
+                    invoice.supplies.append(db.Supply(amount=supply['amount'],
+                                                foodstuff_code=supply['foodstuff_code'],
+                                                expiry=supply['expiry'],
+                                                cafe_id=data['cafe_id']))
+                db.db.session.add(invoice)
 
-       #LOAD Dish, Dishcategory, Linkdishfoodstuff
-        with open('resources/misc/dishes.json') as f:
-            models = json.load(f)
+           #LOAD Foodstuff
+            with open('resources/misc/foodstuffs.json') as f:
+                models = json.load(f)
 
-        for data in models:
-            category = db.Dishcategory(name=data["name"])
-            for dish in data["dishes"]:
-                measurement = db.Measurement.query.filter_by(unit=dish['measurement']).first()
-                if measurement is None:
-                    db.db.session.add(db.Measurement(unit=dish['measurement']))
+            for data in models:
+                category = db.Foodstuffcategory(name=data["name"])
+                for foodstuff in data['foodstuffs']:
+                    measurement = db.Measurement.query.filter_by(unit=foodstuff['measurement']).first()
+                    if measurement is None:
+                        db.db.session.add(db.Measurement(unit=foodstuff['measurement']))
+                    
+                    db.db.session.add(db.Foodstuff(code=foodstuff['code'],
+                                                    name=foodstuff['name'],
+                                                    measurement_unit=foodstuff['measurement'],
+                                                    category_name=category.name))
+                db.db.session.add(category)
 
-                new_dish = db.Dish(name=dish["name"],
-                                    description=dish["description"],
-                                    price=dish["price"],
-                                    amount=dish["amount"],
-                                    measurement_unit=dish["measurement"],
-                                    cooking_time=dish["cooking_time"],
-                                    category_name=category.name)
-                if "photo" in dish:
-                    new_dish.photo = dish["photo"]
-                db.db.session.add(new_dish)
-                new_dish = db.Dish.query.filter_by(name=dish["name"]).first()
+           #LOAD Dish, Dishcategory, Linkdishfoodstuff
+            with open('resources/misc/dishes.json') as f:
+                models = json.load(f)
 
-                for foodstuff in dish['ingredients']:
-                    db.db.session.add(db.Linkdishfoodstuff(amount=foodstuff['amount'],
-                                                        foodstuff_code=foodstuff['code'],
-                                                        dish_id=new_dish.id))
+            for data in models:
+                category = db.Dishcategory(name=data["name"])
+                for dish in data["dishes"]:
+                    measurement = db.Measurement.query.filter_by(unit=dish['measurement']).first()
+                    if measurement is None:
+                        db.db.session.add(db.Measurement(unit=dish['measurement']))
 
-            db.db.session.add(category)
+                    new_dish = db.Dish(name=dish["name"],
+                                        description=dish["description"],
+                                        price=dish["price"],
+                                        amount=dish["amount"],
+                                        measurement_unit=dish["measurement"],
+                                        cooking_time=dish["cooking_time"],
+                                        category_name=category.name)
+                    if "photo" in dish:
+                        new_dish.photo = dish["photo"]
+                    db.db.session.add(new_dish)
+                    new_dish = db.Dish.query.filter_by(name=dish["name"]).first()
 
-       #LOAD Cafe, Employee
-        with open('resources/misc/employees.json') as f:
-            models = json.load(f)
+                    for foodstuff in dish['ingredients']:
+                        db.db.session.add(db.Linkdishfoodstuff(amount=foodstuff['amount'],
+                                                            foodstuff_code=foodstuff['code'],
+                                                            dish_id=new_dish.id))
 
-        for data in models:
-            cafe = db.Cafe(name=data["name"],
-                        address=data["address"])
-            for emp in data["staff"]:
-                employee = db.Employee(login=emp["login"],
-                                token=db.Employee.randToken(),
-                                phone=emp["phone"],
-                                email=emp["email"],
-                                permission=sum(db.Role[x] for x in emp["permission"]))
-                if "token" in emp:
-                    employee.token = emp["token"]
-                cafe.employees.append(employee)
-            db.db.session.add(cafe)
+                db.db.session.add(category)
 
-       #LOAD Driver
-        with open('resources/misc/drivers.json') as f:
-            drivers = json.load(f)
+           #LOAD Cafe, Employee
+            with open('resources/misc/employees.json') as f:
+                models = json.load(f)
 
-        for driver in drivers:
-            drv = db.Driver(phone=driver["phone"],
-                            name=driver["name"],
-                            email=driver["email"],
-                            registered_date=driver["registered_date"],
-                            license_number=driver["license_number"],
-                            secret=db.Client.randSecret())
-            if "token" in driver:
-                drv.token = driver["token"]
-            db.db.session.add(drv)
+            for data in models:
+                cafe = db.Cafe(name=data["name"],
+                            address=data["address"])
+                for emp in data["staff"]:
+                    employee = db.Employee(login=emp["login"],
+                                    token=db.Employee.randToken(),
+                                    phone=emp["phone"],
+                                    email=emp["email"],
+                                    permission=sum(db.Role[x] for x in emp["permission"]))
+                    if "token" in emp:
+                        employee.token = emp["token"]
+                    cafe.employees.append(employee)
+                db.db.session.add(cafe)
 
-       #LOAD Archivedorder
-        with open('resources/misc/archivedorders.json') as f:
-            orders = json.load(f)
+           #LOAD Driver
+            with open('resources/misc/drivers.json') as f:
+                drivers = json.load(f)
 
-        for data in orders:
-            db.db.session.add(db.Archivedorder(address=data["address"],
-                                                client_phone=data["client_phone"],
-                                                dish_name=data["dish_name"],
-                                                money=data["money"],
-                                                date=data["date"],
-                                                waiting_time=data["waiting_time"]))
+            for driver in drivers:
+                drv = db.Driver(phone=driver["phone"],
+                                name=driver["name"],
+                                email=driver["email"],
+                                registered_date=driver["registered_date"],
+                                license_number=driver["license_number"],
+                                secret=db.Client.randSecret())
+                if "token" in driver:
+                    drv.token = driver["token"]
+                db.db.session.add(drv)
 
-        db.db.session.commit()
+           #LOAD Archivedorder
+            with open('resources/misc/archivedorders.json') as f:
+                orders = json.load(f)
+
+            for data in orders:
+                db.db.session.add(db.Archivedorder(address=data["address"],
+                                                    client_phone=data["client_phone"],
+                                                    dish_name=data["dish_name"],
+                                                    money=data["money"],
+                                                    date=data["date"],
+                                                    waiting_time=data["waiting_time"]))
+
+            db.db.session.commit()
         
     app.run(host='0.0.0.0', port='5000')
 
