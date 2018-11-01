@@ -1349,5 +1349,5 @@ if __name__ == '__main__':
 
         db.db.session.commit()
         
-    app.run(host='0.0.0.0', port='5000', debug=True) # WARNING: debug=True
+    app.run(host='0.0.0.0', port='5000')
 
