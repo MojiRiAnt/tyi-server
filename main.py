@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config.update({
     'SQLALCHEMY_DATABASE_URI' : "sqlite:///resources/private/database.db",
     'SQLALCHEMY_TRACK_MODIFICATIONS' : False,
-    'FLASK_ENV' : "development",
+    'FLASK_ENV' : "production",
 })
 
 CORS(app)
